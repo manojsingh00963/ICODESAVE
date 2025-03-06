@@ -1,7 +1,7 @@
 # ICODESAVE
 
 ICODESAVE is a simple web application designed to help users save and manage their code snippets. It provides a clean and intuitive interface for storing, organizing, and retrieving code snippets, making it a handy tool for developers and programmers.
-
+<hr>
 ## Features
 
 * **Snippet Saving:** Easily save code snippets with a title and description.
@@ -68,14 +68,8 @@ Contributions are welcome! If you find any bugs or have suggestions for improvem
 4.  Push to your branch.
 5.  Submit a pull request.
 
-## License
-
-(Add a license if you have one, e.g., MIT License)
 
 ## Author
 
 * Manoj Singh - [manojsingh00963](https://github.com/manojsingh00963)
 
-## Contact
-
-(Add contact information if desired)
