@@ -1,9 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
-import pasteReducer from './features/pasteSlice'
+// store.js
+import { configureStore } from '@reduxjs/toolkit';
+import pasteReducer from './features/pasteSlice';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    counter: pasteReducer,
+    pastes: pasteReducer, // <--- This key "pastes" is crucial
   },
-})
+});
 
+export default store;
