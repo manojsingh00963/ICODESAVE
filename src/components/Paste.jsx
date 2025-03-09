@@ -40,33 +40,33 @@ const Paste = () => {
   };
 
   return (
-    <div>
-<div className="flex items-center gap-2 mb-4">
-  <div className="relative">
+    <div className=' mt-24 ' >
+<div className=" flex gap-2 place-content-center ">
+  <div className=" relative ">
     <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
     <input
       type="text"
       placeholder="Search pastes..."
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
-      className="border min-w-[600px] rounded-2xl p-2 pl-10" // Added padding for icon
+      className="border min-w-[600px] rounded p-2 pl-10" // Added padding for icon
     />
   </div>
   <button
     onClick={() => console.log('Searching:', searchTerm)}
-    className="px-4 py-2 bg-blue-500 text-white rounded-2xl hover:bg-blue-600"
+    className="px-4 py-2 cursor-pointer bg-indigo-800 text-white rounded-4xl hover:bg-blue-600"
   >
-    Search
+    <FaSearch/>
   </button>
 </div>
 
-      <div>
+      <div className=' mt-4 flex flex-row text-center place-content-center '>
         {filteredData.map((paste) => (
           <div key={paste.id} className="relative border rounded p-4 mb-2">
             <h3>{paste.tittle}</h3>
             <p>{paste.content.substring(0, 100)}...</p>
 
-            <div className="flex flex-row gap-4 place-content-center m-2">
+            <div className=" flex flex-colr gap-4 place-content-center m-2">
               <NavLink to={`/paste/${paste.id}`}>
                 <FaEdit className="cursor-pointer text-[16px]" />
               </NavLink>
@@ -93,7 +93,7 @@ const Paste = () => {
                 }}
               />
             </div>
-            <cite>{paste.createdAt}</cite>
+            <cite className=' absolute left-2 text-xs text-gray-400 ' >{paste.createdAt.substring(0, 10)}</cite>
           </div>
         ))}
       </div>

@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'motion/react';
+import { FaFileCode } from "react-icons/fa6";
+import { MdEditRoad } from "react-icons/md";
+import { BsCodeSlash } from "react-icons/bs";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateToPastes, addToPastes } from '../redux/features/pasteSlice';
@@ -10,6 +15,8 @@ const Home = () => {
   const allPastes = useSelector((state) => state.pastes.pastes);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // ✅ Added navigate function
+
+  const ref = useRef(null);
 
   const createPaste = () => {
     const paste = {
@@ -44,24 +51,33 @@ const Home = () => {
   }, [allPastes, pasteId]);
 
   return (
-    <div>
-      <div className="flex flex-row gap-7 place-content-between">
+    <div className=' mt-14 pb-10 flex flex-col container mx-auto place-content-center ' >
+      <div className="flex gap-2 justify-center ">
         <input
-          className="w-[65%] border rounded-md mt-10 pl-4"
+          className="w-[45%] border rounded mt-10 pl-4"
           type="text"
           placeholder="Enter title here"
           value={tittle}
           onChange={(e) => setTittle(e.target.value)}
         />
-        <button onClick={createPaste} className="p-2 border rounded mt-10">
-          {pasteId ? 'Update My Paste' : 'Create My Paste'}
+        <button onClick={createPaste} className="p-2 border rounded mt-10 cursor-pointer ">
+          {pasteId ? <MdEditRoad /> : <FaFileCode />}
         </button>
       </div>
-      <div>
+
+      <div className=' relative border border-t-4 mt-4 mx-auto justify-center ' >
+        <div ref={ref} className="color-round flex p-2 gap-0.5 cursor-grab ">
+          <motion.div drag dragConstraints={ref} whileDrag={{scale:1.1}} dragElastic={0.2} className=" z-10 round w-5 h-5 rounded-full bg-red-500 "></motion.div>
+          <motion.div drag dragConstraints={ref} whileDrag={{scale:1.1}} dragElastic={0.2} className=" z-10 round w-5 h-5 rounded-full bg-yellow-500 "></motion.div>
+          <motion.div drag dragConstraints={ref} whileDrag={{scale:1.1}} dragElastic={0.2} className=" z-10 round w-5 h-5 rounded-full bg-green-500 "></motion.div>
+          <motion.div drag dragConstraints={ref} whileDrag={{scale:1.1}} dragElastic={0.2} className=" z-10 round w-5 h-5 rounded-full bg-blue-500 "></motion.div>
+        </div>
+          <BsCodeSlash className=' absolute right-2 top-2 cursor-none ' />
+
         <textarea
-          className="border rounded-md mt-4 min-w-[500px] p-4"
+          className=" border-t min-w-[500px] p-4"
           value={value}
-          placeholder="Enter content here"
+          placeholder="Enter code here"
           onChange={(e) => setValue(e.target.value)}
           rows={20}
         ></textarea>

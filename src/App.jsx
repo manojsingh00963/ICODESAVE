@@ -1,14 +1,15 @@
 import React from 'react';
-import './App.css';
+import './App.css'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
-import { Home, Navbar, Paste, ViewPaste } from './components';
+import { Home, Login, Navbar, Paste, SignUp, ViewPaste } from './components';
 
 // Layout component to render Navbar and Outlet
 const Layout = () => (
-  <>
+    <div className=" pb-0 min-h-screen bg-gray-900 text-white flex flex-col"
+    >
     <Navbar />
-    <Outlet /> 
-  </>
+    <Outlet/>
+  </div>
 );
 
 const router = createBrowserRouter([
@@ -32,8 +33,16 @@ const router = createBrowserRouter([
         path: 'view/:pasteId', // View specific paste
         element: <ViewPaste />,
       },
+      {
+        path: '/login', 
+        element: <Login/>,
+      },
+      {
+        path: '/signup',
+        element: <SignUp/>,
+      },
     ],
-  },
+  }
 ]);
 
 function App() {
