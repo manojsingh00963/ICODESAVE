@@ -1,36 +1,38 @@
 import React from 'react';
 import { SiGnuprivacyguard } from 'react-icons/si';
 import { NavLink } from 'react-router-dom';
+
 const Navbar = () => {
   return (
-    <div className="navbar mx-auto ">
-
-    <div className=" drop-shadow-xs shadow-blue-300 mx-auto fixed top-4 left-50 right-50 max-w-[40vw]  bg-opacity-30 backdrop-blur-md p-4 rounded-lg shadow-lg flex flex-row gap-4 place-content-evenly">
-      <NavLink 
-        to="/" 
-        className={({ isActive }) => 
-          `text-lg font-semibold ${isActive ? 'text-blue-500' : 'text-gray-800'} hover:text-blue-400 transition duration-300`
-      }
-      >
-        Home
+    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[500px] bg-white/30 backdrop-blur-md p-3 rounded-lg shadow-lg flex justify-between items-center">
+      <div className="flex gap-6">
+        <NavLink 
+          to="/" 
+          className={({ isActive }) => 
+            `text-lg font-semibold transition duration-300 ${
+              isActive ? 'text-blue-500' : 'text-gray-800 hover:text-blue-400'
+            }`
+          }
+        >
+          Home
+        </NavLink>
+        <NavLink 
+          to="/paste" 
+          className={({ isActive }) => 
+            `text-lg font-semibold transition duration-300 ${
+              isActive ? 'text-blue-500' : 'text-gray-800 hover:text-blue-400'
+            }`
+          }
+        >
+          Paste
+        </NavLink>
+      </div>
+      
+      <NavLink to="/" className="text-lg text-gray-800 hover:text-blue-400 transition duration-300">
+        <SiGnuprivacyguard size={24} />
       </NavLink>
-      <NavLink 
-        to="/paste" 
-        className={({ isActive }) => 
-          `text-lg font-semibold ${isActive ? 'text-blue-500' : 'text-gray-800'} hover:text-blue-400 transition duration-300`
-        }
-      >
-        Paste
-      </NavLink>
-    <div className=" auth flex place-items-center ">
-      {/* <button className="text-lg font-semibold text-gray-800 hover:text-blue-400 transition duration-300">Sign In</button> */}
-      <NavLink to={"/"} className="text-lg font-semibold text-gray-800 hover:text-blue-400 transition duration-300">
-      <SiGnuprivacyguard />
-      </NavLink>
-    </div>
-    </div>
-  </div>
+    </nav>
   );
-}
+};
 
 export default Navbar;
