@@ -22,16 +22,7 @@ const ViewPaste = () => {
   }, [paste]);
 
   if (!paste) {
-    toast.info('No Paste found!', {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    toast.info('No Paste found!', { autoClose: 3000 });
     return null;
   }
 
@@ -54,25 +45,34 @@ const ViewPaste = () => {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mt-28 flex justify-center"
+      className="mt-28 flex justify-center px-4"
     >
-      <div ref={pasteRef} className=" relative min-w-[350px] min-h-[350px] mx-16 flex flex-col items-center p-4 border rounded-lg shadow-md bg-transparent text-white selection:bg-[red] selection:text-[yellow] " >
-        <h2 className="text-xl  font-semibold">{paste.tittle}</h2>
-        <div className=" border-t-2   ">
-          <BsCodeSlash className='bg-transparent absolute right-4 top-4 cursor-none' />
-          <div className="relative w-full flex">
-            <aside className="w-10 text-right pr-2 pt-4 text-gray-400 border-r border-gray-600">
+      <div
+        ref={pasteRef}
+        className="relative w-full max-w-3xl mx-auto flex flex-col p-4 border rounded-lg shadow-md bg-transparent text-white selection:bg-red-500 selection:text-yellow-400 overflow-x-auto"
+      >
+        <h2 className="text-lg sm:text-xl font-semibold text-center mb-2">{paste.tittle}</h2>
+        <div className="border-t border-gray-600 ">
+
+          <BsCodeSlash className='absolute right-4 top-4 text-gray-400' />
+
+          <div className="relative flex">
+            <aside className="min-w-[40px] text-right pr-2 pt-4 text-gray-400 border-r border-gray-600">
               {lines.map((_, index) => (
                 <div key={index}>{index + 1}</div>
               ))}
             </aside>
-            <pre className="whitespace-pre-line p-4 flex-1 bg-transparent text-white">{paste.content}</pre>
+            <pre className="whitespace-pre-wrap p-4 flex-1 text-white">{paste.content}</pre>
           </div>
         </div>
       </div>
-      <button onClick={handleSnapshot} className="absolute top-4 right-6 flex items-center gap-2 px-4 py-2 border rounded bg-indigo-900 text-white hover:bg-indigo-950 cursor-pointer transition">
-        <FaCameraRetro />
-      </button>
+
+      <button
+  onClick={handleSnapshot}
+  className="absolute top-4 right-6 sm:top-60 md:top-10 flex items-center gap-2 px-4 py-2 border rounded bg-indigo-900 text-white hover:bg-indigo-950 cursor-pointer transition"
+>
+  <FaCameraRetro />
+</button>
     </motion.div>
   );
 };

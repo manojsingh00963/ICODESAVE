@@ -1,13 +1,23 @@
 import React from 'react';
-import './App.css';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { Home, Login, Navbar, Paste, SignUp, ViewPaste } from './components';
+import { ToastContainer } from 'react-toastify';
 
 // Layout component with a black glass effect
 const Layout = () => (
-  <div className="min-h-screen flex flex-col bg-[#0d0d0d] text-white relative">
-    {/* Black Mirror Glass Effect */}
-    <div className="absolute inset-0 bg-black/30 backdrop-blur-2xl shadow-[0px_0px_30px_rgba(255,255,255,0.05)] rounded-lg" />
+  <div className="min-h-screen w-full flex flex-col bg-gray-900 text-white relative">
+    {/* Toast Notifications */}
+    <ToastContainer
+      position="top-center"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={true}
+      closeOnClick={true}
+      pauseOnFocusLoss={false}
+      draggable={true}
+      pauseOnHover={true}
+      theme="light"
+    />
 
     <Navbar />
     <Outlet />
@@ -23,8 +33,8 @@ const router = createBrowserRouter([
       { path: 'paste', element: <Paste /> },
       { path: 'paste/:pasteId', element: <Home /> },
       { path: 'view/:pasteId', element: <ViewPaste /> },
-      { path: '/login', element: <Login /> },
-      { path: '/signup', element: <SignUp /> },
+      { path: 'login', element: <Login /> },  // Removed unnecessary leading '/'
+      { path: 'signup', element: <SignUp /> }, // Removed unnecessary leading '/'
     ],
   }
 ]);

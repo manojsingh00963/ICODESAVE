@@ -56,13 +56,13 @@ const Home = () => {
       
       <div className="flex gap-2 justify-center">
         <input
-          className="w-[45%] h-[15%] border rounded p-2 pl-4 focus:ring-0 bg-neutral-2 dark:bg-black font-normal placeholder:text-gray-300 focus:outline-none resize-none leading-tight dark:text-white dark:caret-white"
+          className=" z-10 w-[45%] h-[15%] border rounded p-2 pl-4 focus:ring-0 bg-neutral-2 dark:bg-black font-normal placeholder:text-gray-300 focus:outline-none resize-none leading-tight dark:text-white dark:caret-white"
           type="text"
           placeholder="Enter title here"
           value={tittle}
           onChange={(e) => setTittle(e.target.value)}
         />
-        <button onClick={createPaste} className="bg-transparent p-2 text-xl hover:text-green-800 border rounded cursor-pointer">
+        <button onClick={createPaste} className=" z-10 bg-transparent p-2 text-xl hover:text-green-800 border rounded cursor-pointer">
           {pasteId ? <MdEditRoad /> : <FaFileCode />}
         </button>
       </div>
