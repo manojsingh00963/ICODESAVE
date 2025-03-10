@@ -92,7 +92,7 @@ const Paste = () => {
                 />
               </div>
               <FaCopy
-                className="cursor-pointer text-gray-400 hover:text-gray-600 transition duration-200"
+                className=" absolute top-2 right-2 cursor-pointer text-gray-400 hover:text-gray-600 transition duration-200"
                 onClick={() => {
                   navigator.clipboard.writeText(paste.content);
                   toast.success('Copied to clipboard');

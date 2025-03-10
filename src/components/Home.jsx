@@ -61,6 +61,7 @@ const Home = () => {
           placeholder="Enter title here"
           value={tittle}
           onChange={(e) => setTittle(e.target.value)}
+          required
         />
         <button onClick={createPaste} className=" z-10 bg-transparent p-2 text-xl hover:text-green-800 border rounded cursor-pointer">
           {pasteId ? <MdEditRoad /> : <FaFileCode />}
@@ -88,7 +89,8 @@ const Home = () => {
             onChange={(e) => setValue(e.target.value)}
             rows={20}
             className="min-w-[500px] p-4 min-h-[300px] text-sm overflow-y-auto rounded-none focus:ring-0 bg-neutral-2 dark:bg-black font-normal placeholder:text-gray-900 dark:placeholder:text-gray-500 focus:outline-none resize-none leading-tight dark:text-white dark:caret-white pl-4 bg-[linear-gradient(white_14px,transparent_1px)] dark:bg-[linear-gradient(black_14px,transparent_1px)] bg-[size:100%_15px]"
-            spellCheck="false">
+            spellCheck="false" 
+            required >
           </textarea>
         </div>
       </div>
