@@ -52,7 +52,7 @@ const Paste = () => {
 
       {/* Responsive Grid Layout */}
       <motion.div 
-        className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+        className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6'
         whileInView={{ opacity: 1, scale: 1 }}
         initial={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.5 }}
@@ -60,7 +60,7 @@ const Paste = () => {
         {filteredData.map((paste) => (
           <motion.div 
             key={paste.id} 
-            className="relative border rounded-lg p-4 shadow-md bg-gray-900 hover:shadow-lg transition duration-300"
+            className="relative w-[250px] border rounded-lg p-4 shadow-md bg-gray-900 hover:shadow-lg transition duration-300"
             whileHover={{ scale: 1.02 }}
           >
             {/* Title */}

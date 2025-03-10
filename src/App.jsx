@@ -4,11 +4,11 @@ import { Navbar } from './components';
 import { ToastContainer } from 'react-toastify';
 
 const App = () => (
-  <div className="min-h-screen w-full flex flex-col bg-gray-900 text-white relative">
+  <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-black to-gray-900 text-white relative">
     {/* Toast Notifications */}
     <ToastContainer
       position="top-center"
-      autoClose={3000}
+      autoClose={2000}
       hideProgressBar={false}
       newestOnTop={true}
       closeOnClick={true}

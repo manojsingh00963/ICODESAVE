@@ -47,7 +47,7 @@ const Navbar = () => {
       </div>
 
       {/* Logo/Icon */}
-      <NavLink to="/" className="text-lg text-gray-800 hover:text-blue-400 transition duration-300">
+      <NavLink to="/auth" className="text-lg text-gray-800 hover:text-blue-400 transition duration-300">
         <SiGnuprivacyguard size={24} />
       </NavLink>
     </nav>
