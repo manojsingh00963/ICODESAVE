@@ -11,7 +11,7 @@ const Navbar = () => {
       
       {/* Hamburger Menu for Small Screens */}
       <button 
-        className="md:hidden text-gray-800 hover:text-blue-400 transition duration-300" 
+        className="md:hidden text-gray-800 hover:text-[#84bef0] transition duration-300" 
         onClick={() => setMenuOpen(!menuOpen)}
       >
         {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -26,7 +26,7 @@ const Navbar = () => {
           to="/" 
           className={({ isActive }) => 
             `text-lg font-semibold transition duration-300 ${
-              isActive ? 'text-blue-500' : 'text-gray-800 hover:text-blue-400'
+              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
             }`
           }
           onClick={() => setMenuOpen(false)}
@@ -37,7 +37,7 @@ const Navbar = () => {
           to="/paste" 
           className={({ isActive }) => 
             `text-lg font-semibold transition duration-300 ${
-              isActive ? 'text-blue-500' : 'text-gray-800 hover:text-blue-400'
+              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
             }`
           }
           onClick={() => setMenuOpen(false)}
@@ -47,7 +47,7 @@ const Navbar = () => {
       </div>
 
       {/* Logo/Icon */}
-      <NavLink to="/auth" className="text-lg text-gray-800 hover:text-blue-400 transition duration-300">
+      <NavLink to="/auth" className="text-lg text-gray-800 hover:text-[#84bef0] transition duration-300">
         <SiGnuprivacyguard size={24} />
       </NavLink>
     </nav>
