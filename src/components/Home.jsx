@@ -48,10 +48,10 @@ const Home = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -40 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mt-22 pb-10 flex flex-col container mx-auto px-4 md:px-8 lg:px-16"
+      transition={{ duration: 0.6 }}
+      className="mt-10 pt-20 pb-10 flex flex-col container mx-auto px-4 md:px-8 lg:px-16"
     >
       {/* Title Input and Button */}
       <div className="flex gap-2 justify-center items-center mb-4">
@@ -86,7 +86,7 @@ const Home = () => {
         {/* Code Editor */}
         <div className="flex border-t">
           {/* Line Numbers */}
-          <aside className="w-8 text-right pr-2 pt-4 text-black dark:text-white border-r border-gray-400 dark:border-gray-600 bg-transparent">
+          <aside className="w-6 md:w-6 sm:w-4 text-right pr-2 pt-4 text-black dark:text-white border-r border-gray-400 dark:border-gray-600 bg-transparent  ">
             {value.split('\n').map((_, index) => (
               <div key={index}>{index + 1}</div>
             ))}
@@ -98,7 +98,7 @@ const Home = () => {
             placeholder="Enter code here"
             onChange={(e) => setValue(e.target.value)}
             rows={20}
-            className="w-full min-h-[300px] text-sm p-4 focus:outline-none bg-neutral-2 dark:bg-black font-normal placeholder:text-gray-900 dark:placeholder:text-gray-500 dark:text-white dark:caret-white"
+            className="w-full mr-2 min-h-[300px] text-sm p-4 focus:outline-none bg-neutral-2 dark:bg-black font-normal placeholder:text-gray-900 dark:placeholder:text-gray-500 dark:text-white dark:caret-white"
             spellCheck="false"
           />
         </div>

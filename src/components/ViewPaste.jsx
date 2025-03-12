@@ -6,7 +6,7 @@ import { FaCameraRetro } from "react-icons/fa";
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
 
 const ViewPaste = () => {
   const { pasteId } = useParams();
@@ -26,22 +26,24 @@ const ViewPaste = () => {
     return null;
   }
 
-  const handleSnapshot = async () => {
-    try {
-      const canvas = await html2canvas(pasteRef.current, { backgroundColor: "" });
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = 'paste-screenshot.png';
-      link.click();
-      toast.success("Screenshot taken!");
-    } catch (error) {
-      console.error("Error capturing screenshot:", error);
-      toast.error("Failed to take screenshot.");
-    }
-  };
+
+  // const handleSnapshot = async () => {
+  //   try {
+  //     const canvas = await html2canvas(pasteRef.current, { backgroundColor: "" });
+  //     const link = document.createElement('a');
+  //     link.href = canvas.toDataURL('image/png');
+  //     link.download = 'paste-screenshot.png';
+  //     link.click();
+  //     toast.success("Screenshot taken!");
+  //   } catch (error) {
+  //     console.error("Error capturing screenshot:", error);
+  //     toast.error("Failed to take screenshot.");
+  //   }
+  // };
 
   return (
     <motion.div
+    
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -68,7 +70,8 @@ const ViewPaste = () => {
       </div>
 
       <button
-  onClick={handleSnapshot}
+  // onClick={handleSnapshot}
+  onClick={()=>window.print()}
   className="absolute top-4 right-6 sm:top-60 md:top-10 flex items-center gap-2 px-4 py-2 border rounded bg-indigo-900 text-white hover:bg-indigo-950 cursor-pointer transition"
 >
   <FaCameraRetro />

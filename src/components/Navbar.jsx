@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { SiGnuprivacyguard } from 'react-icons/si';
 import { NavLink } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed z-20 top-4 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[500px] bg-transparent bg-white/40 border-t border-b border-purple-200 backdrop-blur-md p-3 rounded shadow-lg flex justify-between items-center">
+    <nav className="fixed z-20 top-4 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[500px] bg-white/40 border-t border-b border-purple-200 backdrop-blur-md p-3 rounded shadow-lg flex justify-between items-center">
       
       {/* Hamburger Menu for Small Screens */}
       <button 
@@ -18,33 +19,41 @@ const Navbar = () => {
       </button>
 
       {/* Links */}
-      <div className={`absolute md:relative top-14 md:top-auto left-1/2 md:left-auto transform md:transform-none -translate-x-1/2 md:translate-x-0 
-        w-[90vw] md:w-auto bg-white/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none rounded-lg shadow-md md:shadow-none flex flex-col md:flex-row md:items-center gap-6 p-4 md:p-0 
-        ${menuOpen ? "flex" : "hidden md:flex"}`}
-      >
-        <NavLink 
-          to="/" 
-          className={({ isActive }) => 
-            `text-lg font-semibold transition duration-300 ${
-              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
-            }`
-          }
-          onClick={() => setMenuOpen(false)}
-        >
-          Home
-        </NavLink>
-        <NavLink 
-          to="/paste" 
-          className={({ isActive }) => 
-            `text-lg font-semibold transition duration-300 ${
-              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
-            }`
-          }
-          onClick={() => setMenuOpen(false)}
-        >
-          Paste
-        </NavLink>
-      </div>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -20, height: 0 }}
+            transition={{ type: "spring", stiffness: 120, damping: 15 }}
+            className="z-10 absolute md:relative top-14 md:top-auto left-1/2 md:left-auto transform md:transform-none -translate-x-1/2 md:translate-x-0 
+              w-[80vw] md:w-auto bg-white/50 md:bg-transparent backdrop-blur-md md:backdrop-blur-none rounded-lg shadow-md md:shadow-none flex flex-col md:flex-row md:items-center gap-6 p-4 md:p-0"
+          >
+            <NavLink 
+              to="/" 
+              className={({ isActive }) => 
+                `text-lg font-semibold transition duration-300 ${
+                  isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+                }`
+              }
+              onClick={() => setMenuOpen(false)}
+            >
+              Home
+            </NavLink>
+            <NavLink 
+              to="/paste" 
+              className={({ isActive }) => 
+                `text-lg font-semibold transition duration-300 ${
+                  isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+                }`
+              }
+              onClick={() => setMenuOpen(false)}
+            >
+              Paste
+            </NavLink>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Logo/Icon */}
       <NavLink to="/auth" className="text-lg text-gray-800 hover:text-[#84bef0] transition duration-300">
