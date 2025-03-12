@@ -49,6 +49,7 @@ const Home = () => {
 
   return (
     <motion.div
+    ref={ref}
       initial={{ opacity: 0, y: -40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -74,7 +75,7 @@ const Home = () => {
       {/* Code Input Area */}
       <div className="relative bg-transparent border border-t-4 mt-4 mx-auto w-full max-w-2xl">
         {/* Drag Handles */}
-        <div ref={ref} className="flex p-2 gap-1">
+        <div  className="flex p-2 gap-1">
           <motion.div drag dragConstraints={ref} whileDrag={{ scale: 1.1 }} dragElastic={0.2} className="w-4 h-4 rounded-full bg-red-500 cursor-grab" />
           <motion.div drag dragConstraints={ref} whileDrag={{ scale: 1.1 }} dragElastic={0.2} className="w-4 h-4 rounded-full bg-yellow-500 cursor-grab" />
           <motion.div drag dragConstraints={ref} whileDrag={{ scale: 1.1 }} dragElastic={0.2} className="w-4 h-4 rounded-full bg-green-500 cursor-grab" />
