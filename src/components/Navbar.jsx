@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { SiGnuprivacyguard } from 'react-icons/si';
 import { NavLink } from 'react-router-dom';
@@ -19,6 +20,30 @@ const Navbar = () => {
       </button>
 
       {/* Links */}
+      <div className="hidden md:flex gap-6">
+        <NavLink 
+          to="/" 
+          className={({ isActive }) => 
+            `text-lg font-semibold transition duration-300 ${
+              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+            }`
+          }
+        >
+          Home
+        </NavLink>
+        <NavLink 
+          to="/paste" 
+          className={({ isActive }) => 
+            `text-lg font-semibold transition duration-300 ${
+              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+            }`
+          }
+        >
+          Paste
+        </NavLink>
+      </div>
+
+      {/* Animated Links for Small Screens */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div 
@@ -26,8 +51,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ type: "spring", stiffness: 120, damping: 15 }}
-            className="z-10 absolute md:relative top-14 md:top-auto left-1/2 md:left-auto transform md:transform-none -translate-x-1/2 md:translate-x-0 
-              w-[80vw] md:w-auto bg-white/50 md:bg-transparent backdrop-blur-md md:backdrop-blur-none rounded-lg shadow-md md:shadow-none flex flex-col md:flex-row md:items-center gap-6 p-4 md:p-0"
+            className="z-10 absolute md:hidden top-14 left-1/2 transform -translate-x-1/2 w-[80vw] bg-white/50 backdrop-blur-md rounded-lg shadow-md flex flex-col gap-6 p-4"
           >
             <NavLink 
               to="/" 

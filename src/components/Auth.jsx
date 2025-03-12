@@ -6,6 +6,7 @@ const Auth = () => {
   const [file, setFile] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState("");
