@@ -111,6 +111,9 @@ const Auth = () => {
                 src={file}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover border-4 border-[#00008b57]"
+                onError={(e) => {
+                  e.target.src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
+                }}
               />
             )}
             <label className="absolute bottom-0 right-0 p-2 bg-[#00008b88] rounded-full text-white cursor-pointer">
