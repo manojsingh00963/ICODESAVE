@@ -1,6 +1,7 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-const Login = () => {
+const LogIn = () => {
   return (
     <div className="bg-gradient-to-b from-black to-gray-900 flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 space-y-6 bg-black text-white">
@@ -34,24 +35,28 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-md"
+            className=" w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-md hover:cursor-pointer "
           >
-            Sign In
+            LogIn
           </button>
           <div className="flex items-center justify-center space-x-2">
             <span className="text-gray-400">Or</span>
           </div>
-          <button
+          {/* <button
             type="button"
             className="w-full py-2 bg-gray-800 text-white rounded-md flex items-center justify-center space-x-2"
           >
-            <i className="fab fa-google"></i>
+            <i className="fab fa-google hover:cursor-pointer "></i>
             <span>Sign in with Google</span>
+          </button> */}
+          <button>
+            <NavLink to="/auth/signup" className="text-white">SignUp</NavLink>
           </button>
+
         </form>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default LogIn;

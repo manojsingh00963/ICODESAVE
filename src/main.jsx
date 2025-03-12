@@ -18,8 +18,12 @@ const router = createBrowserRouter([
       { path: 'paste/:pasteId', element: <Home /> },
       { path: 'view/:pasteId', element: <ViewPaste /> },
       { path: 'login', element: <Login /> },
-      { path: 'signup', element: <SignUp /> },
-      { path: 'auth', element: <Auth/> },
+      {path: 'auth', element: <Auth/>,
+        children: [
+          { path: 'signup', element: <SignUp /> },
+          { path: 'login', element: <Login/> },
+        ]
+      }
     ],
   },
 ]);

@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar, StartAnimate } from './components';
 import { ToastContainer } from 'react-toastify';
-import { SplashCursor } from './components/Animation';
+// import { SplashCursor } from './components/Animation';
 
 function App() {
 
@@ -11,7 +11,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowAnimation(false);
-    }, 8*1000);
+    }, 6*1000);
     return () => {
       clearTimeout(timer)
     }
@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div className="showAnimation">
-      <SplashCursor/>
+      {/* <SplashCursor/> */}
       {showAnimation ? <StartAnimate /> : <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-[#000054e4] to-[#c290fbd8] text-white relative">
         {/* Toast Notifications */}
         <ToastContainer

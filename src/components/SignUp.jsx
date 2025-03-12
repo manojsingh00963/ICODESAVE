@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const SignUp = () => {
   return (
@@ -39,19 +40,22 @@ const SignUp = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-md"
+            className="w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-md hover:cursor-pointer "
           >
             Sign In
           </button>
           <div className="flex items-center justify-center space-x-2">
             <span className="text-gray-400">Or</span>
           </div>
-          <button
+          {/* <button
             type="button"
-            className="w-full py-2 bg-gray-800 text-white rounded-md flex items-center justify-center space-x-2"
+            className="w-full py-2 bg-gray-800 text-white rounded-md flex items-center justify-center space-x-2 hover:cursor-pointer "
           >
             <i className="fab fa-google"></i>
             <span>Sign in with Google</span>
+          </button> */}
+          <button>
+            <NavLink href="/auth/login" className="text-white">LogIn</NavLink>
           </button>
         </form>
       </div>
