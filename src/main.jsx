@@ -5,19 +5,20 @@ import './index.css';
 import store from './redux/store.js';
 import App from './App.jsx';
 import { Home, Login, Paste, SignUp, ViewPaste, Profile } from './components';
+import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
-      { index: true, element: <Home /> },
-      { path: 'paste', element: <Paste /> },
-      { path: 'paste/:pasteId', element: <Home /> }, // ✅ Fix for editing note by ID
-      { path: 'view/:pasteId', element: <ViewPaste /> }, // ✅ Fix for viewing note by ID
-      { path: 'Profile', element: <Profile /> }, // ✅ Profile page (if logged in)
-      { path: 'signup', element: <SignUp /> }, // ✅ Signup page
-      { path: 'login', element: <Login /> }, // ✅ Login page
+      { index: true, element: <ProtectedRoute><Home /></ProtectedRoute> }, // ✅ Protected Home Route
+      { path: 'paste', element: <ProtectedRoute><Paste /></ProtectedRoute> }, // ✅ Protected Paste Route
+      { path: 'paste/:pasteId', element: <ProtectedRoute><Home /></ProtectedRoute> }, // ✅ Protected Editing Note Route
+      { path: 'view/:pasteId', element: <ProtectedRoute><ViewPaste /></ProtectedRoute> }, // ✅ Protected Viewing Note Route
+      { path: 'profile', element: <ProtectedRoute><Profile /></ProtectedRoute> }, // ✅ Protected Profile Route
+      { path: 'signup', element: <SignUp /> }, // ✅ Public Signup Route
+      { path: 'login', element: <Login /> }, // ✅ Public Login Route
     ],
   },
 ]);

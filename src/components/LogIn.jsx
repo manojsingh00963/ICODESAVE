@@ -55,7 +55,7 @@ const LogIn = () => {
           localStorage.setItem("rememberMe", email);
         }
       } else {
-        toast.error(response.data.error || "Invalid credentials!");
+        toast.error(response.data.error || "Please enter correct  email password!");
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -120,34 +120,34 @@ const LogIn = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+              className="absolute cursor-pointer inset-y-0 right-0 flex items-center pr-3 text-gray-400"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
 
           {/* ✅ Remember Me and Forgot Password */}
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <label className="flex items-center text-gray-400">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={() => setRememberMe(!rememberMe)}
-                className="form-checkbox h-4 w-4 text-blue-600"
+                className="form-checkbox h-4 w-4 cursor-pointer text-blue-600"
               />
-              <span className="ml-2">Remember me</span>
+              <span className="ml-2 ">Remember me</span>
             </label>
-            <Link to="/forgot-password" className="text-gray-400 hover:text-gray-300">
+            <Link to="/forgot-password" className="text-gray-400 hover:text-gray-300 cursor-pointer ">
               Forgot password?
             </Link>
-          </div>
+          </div> */}
 
           {/* ✅ Submit Button */}
           <motion.button
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-md ${
+            className={`w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white cursor-pointer rounded-md ${
               loading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-gradient-to-r from-blue-500 to-purple-600"

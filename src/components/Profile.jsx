@@ -4,7 +4,6 @@ import { BsSun, BsMoon } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
 const Profile = () => {
@@ -157,7 +156,7 @@ const Profile = () => {
       }`}
     >
       <div
-        className={`max-w-md w-full rounded-lg shadow-lg p-6 relative ${
+        className={`max-w-md w-full mt-10 rounded-lg shadow-lg p-6 relative ${
           state.darkMode ? "bg-gray-800 text-white" : "bg-white/50 backdrop-blur-md text-black"
         }`}
       >
@@ -178,25 +177,61 @@ const Profile = () => {
             alt="Profile"
             className="w-32 h-32 rounded-full border-2"
           />
-          <input type="file" onChange={handleChange} className="hidden" id="avatar" />
           <label
             htmlFor="avatar"
             className="cursor-pointer flex items-center gap-2 text-blue-400"
           >
             <FaUserEdit />
             Edit Avatar
+          <input type="file" onChange={handleChange} className="hidden " id="avatar" />
           </label>
         </div>
 
         {/* 📝 Profile Info */}
-        <h1 className="text-2xl font-bold text-center">{state.userData.name}</h1>
-        <p className="text-center">{state.userData.profession}</p>
-        <p className="text-center">{state.userData.bio}</p>
+        {state.editMode ? (
+          <div className="mt-4 flex flex-col justify-center ">
+            <input
+              type="text"
+              value={state.userData.name}
+              onChange={(e) =>
+                setState((prev) => ({
+                  ...prev,
+                  userData: { ...prev.userData, name: e.target.value },
+                }))
+              }
+              className="border p-2 rounded w-full"
+            />
+            <textarea
+              value={state.userData.bio}
+              onChange={(e) =>
+                setState((prev) => ({
+                  ...prev,
+                  userData: { ...prev.userData, bio: e.target.value },
+                }))
+              }
+              className="border p-2 rounded w-full mt-2"
+            />
+            <button
+              onClick={() =>
+                setState((prev) => ({ ...prev, editMode: false }))
+              }
+              className="bg-blue-950 hover:bg-blue-900 text-white p-2 cursor-pointer rounded mt-2"
+            >
+              Save Changes
+            </button>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold text-center">{state.userData.name}</h1>
+            <p className="text-center">{state.userData.profession}</p>
+            <p className="text-center">{state.userData.bio}</p>
+          </>
+        )}
 
         {/* ✏️ Edit Profile */}
         <button
           onClick={() => setState((prev) => ({ ...prev, editMode: true }))}
-          className=" absolute top-2 left-4 flex items-center justify-center gap-2 text-blue-500 mt-2 cursor-pointer"
+          className="absolute top-2 left-4 flex items-center justify-center gap-2 text-blue-500 mt-2 cursor-pointer z-50"
         >
           <FaEdit />
           Edit Profile

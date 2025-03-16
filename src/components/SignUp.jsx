@@ -103,16 +103,6 @@ const SignUp = () => {
             className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-          {/* ✅ Profession Input */}
-          <input
-            type="text"
-            name="role"
-            placeholder="Enter your Profession"
-            value={credentials.role}
-            onChange={handleChange}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
 
           {/* ✅ Email Input */}
           <input
@@ -124,7 +114,16 @@ const SignUp = () => {
             className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-
+          {/* ✅ Profession Input */}
+          <input
+            type="text"
+            name="role"
+            placeholder="Enter your Profession"
+            value={credentials.role}
+            onChange={handleChange}
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
           {/* ✅ Password Input */}
           <div className="relative">
             <input
@@ -145,7 +144,7 @@ const SignUp = () => {
                   password: !prev.password,
                 }))
               }
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+              className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-gray-400"
             >
               {showPassword.password ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -171,7 +170,7 @@ const SignUp = () => {
                   cpassword: !prev.cpassword,
                 }))
               }
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+              className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-gray-400"
             >
               {showPassword.cpassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -182,7 +181,7 @@ const SignUp = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-md ${
+            className={`w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white cursor-pointer rounded-md ${
               loading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-gradient-to-r from-blue-500 to-purple-600"
@@ -199,8 +198,8 @@ const SignUp = () => {
 
           {/* ✅ Navigate to Log In */}
           <div className="flex items-center justify-center">
-            <p className="text-gray-400">Already have an account?</p>
-            <Link to="/login" className="text-blue-400 hover:underline ml-1">
+            <p className="text-gray-400 ">Already have an account?</p>
+            <Link to="/login" className="text-blue-400 cursor-pointer hover:underline ml-1">
               Log In
             </Link>
           </div>

@@ -83,6 +83,7 @@ const Home = () => {
           placeholder="Enter title here"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
 
         {/* ✅ Tag Dropdown with Animation */}
@@ -181,6 +182,7 @@ const Home = () => {
             rows={20}
             className="w-full min-h-[300px] text-sm p-4 focus:outline-none bg-gray-50 dark:bg-gray-800 font-normal placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
             spellCheck="false"
+            required
           />
         </div>
       </div>
