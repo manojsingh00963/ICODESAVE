@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('authToken');
@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
     if (!token) {
       setShowMessage(true);
       
-      toast.info('Please login first'); // ✅ Show toast message
+      toast.error('Please login first'); // ✅ Show toast message
     }
   }, [token]);
 

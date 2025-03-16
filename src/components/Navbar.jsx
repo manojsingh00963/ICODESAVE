@@ -1,27 +1,27 @@
 import { useState, useEffect } from 'react';
-import { SiGnuprivacyguard } from 'react-icons/si';
+import { ImProfile } from "react-icons/im";
+// import { SiGnuprivacyguard } from 'react-icons/si';
 import { NavLink } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { MdLogin, MdPersonAdd, MdLogout } from 'react-icons/md';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [user, setUser] = useState(null);
-
-  // ✅ Check login status from localStorage
+  
+  // ✅ Check login status from token
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('user');
-    if (loggedInUser) {
-      setUser(JSON.parse(loggedInUser));
-    }
+    const token = localStorage.getItem('auth-token');
+    setIsLoggedIn(!!token);
   }, []);
 
-  // ✅ Handle Logout
+  // ✅ Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+    localStorage.removeItem('auth-token');
+    setIsLoggedIn(false);
     setDropdownOpen(false);
   };
 
@@ -96,19 +96,18 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* 👤 Profile Dropdown */}
+      {/* 👤 Profile OR Login/Signup */}
       <div className="relative">
-        {user ? (
-          // ✅ If logged in, show Profile and Logout
+        {isLoggedIn ? (
+          // ✅ If logged in, show Profile dropdown
           <>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="text-lg text-gray-800 hover:text-[#84bef0] cursor-pointer transition duration-300"
+              className="flex items-center gap-2 text-gray-800 hover:text-[#84bef0] transition duration-300"
             >
-              <SiGnuprivacyguard size={24} />
+              <ImProfile size={24} />
             </button>
 
-            {/* Dropdown Menu */}
             <AnimatePresence>
               {dropdownOpen && (
                 <motion.div
@@ -116,19 +115,18 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-                  className="absolute w-40 bg-white/50 backdrop-blur-md rounded-md shadow-lg overflow-hidden right-0 top-10"
+                  className="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-lg overflow-hidden"
                 >
                   <NavLink
                     to="/profile"
-                    className="px-4 py-2 text-gray-800 hover:bg-gray-200 flex items-center gap-2"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    <SiGnuprivacyguard size={20} />
                     Profile
                   </NavLink>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-200 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center gap-2"
                   >
                     <MdLogout size={20} />
                     Logout
