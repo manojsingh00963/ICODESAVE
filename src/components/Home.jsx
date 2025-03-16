@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaFileCode, FaHashtag, FaAnglesDown } from "react-icons/fa6";
 import { MdEditRoad } from "react-icons/md";
@@ -36,7 +37,7 @@ const Home = () => {
       if (paste) {
         setTitle(paste.title);
         setContent(paste.content);
-        setTag(paste.tag || 'General');
+        setTag(paste.tag || '');
       } else {
         toast.error('Paste not found!');
         navigate('/paste');
@@ -77,7 +78,7 @@ const Home = () => {
       <div className="flex flex-wrap gap-2 justify-center items-center mb-4">
         {/* ✅ Title Input */}
         <input
-          className="w-full sm:max-w-xs md:max-w-md lg:max-w-lg border rounded p-2 pl-4 bg-gray-100 dark:bg-black font-normal placeholder:text-gray-400 focus:outline-none dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
+          className="w-[50vw] sm:max-w-xs md:max-w-md lg:max-w-lg border rounded p-2 pl-4 bg-gray-100 dark:bg-black font-normal placeholder:text-gray-400 focus:outline-none dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
           type="text"
           placeholder="Enter title here"
           value={title}
@@ -111,7 +112,7 @@ const Home = () => {
                 transition={{ duration: 0.2 }}
                 className="absolute top-12 left-0 z-10 w-full bg-gray-100 dark:bg-black border border-gray-300 dark:border-gray-700 rounded shadow-md overflow-hidden"
               >
-                {['General', 'Work', 'Personal', 'Important', 'Urgent'].map((option) => (
+                {['Future', 'Work', 'Personal', 'Important', 'Reuse',].map((option) => (
                   <li
                     key={option}
                     onClick={() => {

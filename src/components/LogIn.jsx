@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
@@ -81,7 +82,7 @@ const LogIn = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -30 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
-      className="bg-gradient-to-b from-black to-gray-900 flex items-center justify-center min-h-screen"
+      className="bg-gradient-to-b pt-22 from-[#000000a4] to-gray-800 flex items-center justify-center min-h-screen"
     >
       <div className="w-full max-w-md p-8 space-y-6 bg-black text-white rounded-lg shadow-lg">
         {/* ✅ Header */}

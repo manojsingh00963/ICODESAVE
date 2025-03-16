@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import { FadeContent, SplitText } from './Animation';
@@ -51,7 +52,7 @@ function StartAnimate() {
               initial={{ scale: 0.3, y: 0 }}
               animate={{ y: -800 }} // Rocket will launch out of the screen
               transition={{ duration: 1.5, delay: 0.5, ease: "easeIn" }}
-              className="w-40 h-40 absolute right-[15%] top-[35%] " // Smaller size
+              className="w-40 h-40 absolute right-[20%] top-[35%] " // Smaller size
             />
           </motion.div>
         )}

@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,6 +14,7 @@ const SignUp = () => {
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
+    role: "",
     password: "",
     cpassword: "",
   });
@@ -35,7 +37,7 @@ const SignUp = () => {
   // ✅ Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, password, cpassword } = credentials;
+    const { name, email, role , password, cpassword } = credentials;
 
     if (!name || !email || !password || !cpassword) {
       toast.error("Please fill in all fields!");
@@ -52,7 +54,7 @@ const SignUp = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/createUser",
-        { name, email, password }
+        { name, email, role, password }
       );
 
       if (response.data.success) {
@@ -78,25 +80,35 @@ const SignUp = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="bg-gradient-to-b from-black to-gray-900 flex items-center justify-center min-h-screen"
+      className="bg-gradient-to-b pt-22  min-w-screen from-[#000000a4] to-gray-800 flex items-center justify-center min-h-screen"
     >
-      <div className="w-full max-w-md p-8 bg-black text-white rounded-lg shadow-lg">
+      <div className="w-[35vw] max-w-md p-8 bg-black text-white rounded shadow-lg">
         {/* ✅ Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold">Create Your Account</h1>
-          <p className="mt-2 text-gray-400">
+          <p className="mt-2 p-2 text-gray-400">
             Enjoy the app and start your journey with us.
           </p>
         </div>
 
         {/* ✅ Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className=" space-y-4">
           {/* ✅ Name Input */}
           <input
             type="text"
             name="name"
             placeholder="Enter your name"
             value={credentials.name}
+            onChange={handleChange}
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {/* ✅ Profession Input */}
+          <input
+            type="text"
+            name="role"
+            placeholder="Enter your Profession"
+            value={credentials.role}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
