@@ -3,12 +3,13 @@ import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authToken');
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     if (!token) {
       setShowMessage(true);
+      
       toast.error('Please login first'); // ✅ Show toast message
     }
   }, [token]);
