@@ -82,7 +82,7 @@ const SignUp = () => {
       transition={{ duration: 0.4, ease: "easeInOut" }}
       className="bg-gradient-to-b pt-22  min-w-screen from-[#000000a4] to-gray-800 flex items-center justify-center min-h-screen"
     >
-      <div className="w-[35vw] max-w-md p-8 bg-black text-white rounded shadow-lg">
+      <div className="w-full max-w-md p-8 bg-black text-white rounded shadow-lg">
         {/* ✅ Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold">Create Your Account</h1>
