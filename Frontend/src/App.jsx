@@ -11,7 +11,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowAnimation(false);
-    }, 0);
+    }, 6*1000);
     return () => {
       clearTimeout(timer)
     }

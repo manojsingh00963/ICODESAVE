@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import './index.css';
-import store from './redux/Store.js';
+import store from './redux/store.js';
 import App from './App.jsx';
 import { Home, Login, Paste, SignUp, ViewPaste, Profile } from './components';
 
