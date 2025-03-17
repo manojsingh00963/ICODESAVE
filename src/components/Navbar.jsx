@@ -11,14 +11,15 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  
+
   // ✅ Check login status from token
   useEffect(() => {
-    const token = localStorage.getItem('auth-token');
-    setIsLoggedIn(!!token);
+    const token = localStorage.getItem('authToken');
+    console.log(token);
+    setIsLoggedIn(token ? true : false);
   }, []);
 
-  // ✅ Handle logout
+  // ✅ Handle logout+
   const handleLogout = () => {
     localStorage.removeItem('auth-token');
     setIsLoggedIn(false);
@@ -27,10 +28,10 @@ const Navbar = () => {
 
   return (
     <nav className="fixed z-20 top-4 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[500px] bg-white/40 border-t border-b border-purple-200 backdrop-blur-md p-3 rounded shadow-lg flex justify-between items-center">
-      
+
       {/* 🍔 Hamburger Menu for Small Screens */}
-      <button 
-        className="md:hidden text-gray-800 hover:text-[#84bef0] transition duration-300" 
+      <button
+        className="md:hidden text-gray-800 hover:text-[#84bef0] transition duration-300"
         onClick={() => setMenuOpen(!menuOpen)}
       >
         {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -38,21 +39,19 @@ const Navbar = () => {
 
       {/* 🌐 Links for Large Screens */}
       <div className="hidden md:flex gap-6">
-        <NavLink 
-          to="/" 
-          className={({ isActive }) => 
-            `text-lg font-semibold transition duration-300 ${
-              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `text-lg font-semibold transition duration-300 ${isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
             }`
           }
         >
           Home
         </NavLink>
-        <NavLink 
-          to="/paste" 
-          className={({ isActive }) => 
-            `text-lg font-semibold transition duration-300 ${
-              isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+        <NavLink
+          to="/paste"
+          className={({ isActive }) =>
+            `text-lg font-semibold transition duration-300 ${isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
             }`
           }
         >
@@ -63,29 +62,27 @@ const Navbar = () => {
       {/* 📱 Animated Links for Small Screens */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20, height: 0 }}
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: -20, height: 0 }}
             transition={{ type: "spring", stiffness: 120, damping: 15 }}
             className="z-10 absolute md:hidden top-14 left-1/2 transform -translate-x-1/2 w-[80vw] bg-white/50 backdrop-blur-md rounded-lg shadow-md flex flex-col gap-6 p-4"
           >
-            <NavLink 
-              to="/" 
-              className={({ isActive }) => 
-                `text-lg font-semibold transition duration-300 ${
-                  isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `text-lg font-semibold transition duration-300 ${isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
                 }`
               }
               onClick={() => setMenuOpen(false)}
             >
               Home
             </NavLink>
-            <NavLink 
-              to="/paste" 
-              className={({ isActive }) => 
-                `text-lg font-semibold transition duration-300 ${
-                  isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
+            <NavLink
+              to="/paste"
+              className={({ isActive }) =>
+                `text-lg font-semibold transition duration-300 ${isActive ? 'text-[#33008b]' : 'text-gray-800 hover:text-[#84bef0]'
                 }`
               }
               onClick={() => setMenuOpen(false)}
@@ -97,18 +94,23 @@ const Navbar = () => {
       </AnimatePresence>
 
       {/* 👤 Profile OR Login/Signup */}
-      <div className="relative">
+      <div className="relative ">
         {isLoggedIn ? (
           // ✅ If logged in, show Profile dropdown
           <>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 text-gray-800 hover:text-[#84bef0] transition duration-300"
+              className="flex items-center cursor-pointer gap-2 text-gray-800 hover:text-[#84bef0] transition duration-300"
             >
-              <ImProfile size={24} />
+              <NavLink
+                to="/profile"
+                className="text-lg text-gray-800 hover:text-[#84bef0] transition duration-300 flex items-center gap-1"
+              >
+                <ImProfile size={24} />
+              </NavLink>
             </button>
 
-            <AnimatePresence>
+            {/* <AnimatePresence>
               {dropdownOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
@@ -119,21 +121,21 @@ const Navbar = () => {
                 >
                   <NavLink
                     to="/profile"
-                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    className="block px-4 py-2 cursor-pointer text-gray-800 hover:bg-gray-100"
                     onClick={() => setDropdownOpen(false)}
                   >
                     Profile
                   </NavLink>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 cursor-pointer text-gray-800 hover:bg-gray-100 flex items-center gap-2"
                   >
                     <MdLogout size={20} />
                     Logout
                   </button>
                 </motion.div>
               )}
-            </AnimatePresence>
+            </AnimatePresence> */}
           </>
         ) : (
           // ✅ If NOT logged in, show Login and Signup

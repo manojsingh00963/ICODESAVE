@@ -4,6 +4,7 @@ import { BsSun, BsMoon } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
 const Profile = () => {
@@ -150,7 +151,11 @@ const Profile = () => {
   };
 
   return (
-    <div
+    <motion.div
+          initial={{ opacity: 0, z: -30 }}
+          animate={{ opacity: 1, z: 10 }}
+          exit={{ opacity: 0, z: -30 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
       className={`min-h-screen overflow-x-hidden flex items-center justify-center p-4 ${
         state.darkMode ? "bg-gray-900" : "bg-blue-100"
       }`}
@@ -282,7 +287,7 @@ const Profile = () => {
           </motion.form>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
