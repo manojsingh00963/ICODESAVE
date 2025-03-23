@@ -10,10 +10,10 @@ import { motion } from "framer-motion";
 const Profile = () => {
   const navigate = useNavigate();
 
-  // ✅ State Handling
+  //  State Handling
   const [state, setState] = useState({
     file: null,
-    darkMode: false,
+    darkMode: true,
     showFeedback: false,
     rating: 0,
     feedback: "",
@@ -27,7 +27,7 @@ const Profile = () => {
     },
   });
 
-  // ✅ Load User Data + Theme State
+  //  Load User Data + Theme State
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
@@ -56,7 +56,7 @@ const Profile = () => {
     }
   }, [navigate]);
 
-  // ✅ Fetch User Data from Backend
+  //  Fetch User Data from Backend
   const fetchUserData = async (token) => {
     try {
       setState((prev) => ({ ...prev, loading: true }));
@@ -87,7 +87,7 @@ const Profile = () => {
     }
   };
 
-  // ✅ Handle Avatar Upload
+  //  Handle Avatar Upload
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -108,7 +108,7 @@ const Profile = () => {
     }
   };
 
-  // ✅ Toggle Dark Mode
+  //  Toggle Dark Mode
   const toggleDarkMode = () => {
     setState((prev) => {
       const newMode = !prev.darkMode;
@@ -117,14 +117,14 @@ const Profile = () => {
     });
   };
 
-  // ✅ Handle Logout
+  //  Handle Logout
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     navigate("/login");
   };
 
-  // ✅ Toggle Feedback Section
+  //  Toggle Feedback Section
   const toggleFeedback = () => {
     setState((prev) => ({
       ...prev,
@@ -132,7 +132,7 @@ const Profile = () => {
     }));
   };
 
-  // ✅ Handle Feedback Submission
+  //  Handle Feedback Submission
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
     if (!state.rating || !state.feedback) {
@@ -155,8 +155,8 @@ const Profile = () => {
           initial={{ opacity: 0, z: -30 }}
           animate={{ opacity: 1, z: 10 }}
           exit={{ opacity: 0, z: -30 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-      className={`min-h-screen overflow-x-hidden flex items-center justify-center p-4 ${
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+      className={`min-h-screen w-full mx-auto flex items-center justify-center p-4 ${
         state.darkMode ? "bg-gray-900" : "bg-blue-100"
       }`}
     >

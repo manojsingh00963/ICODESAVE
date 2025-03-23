@@ -12,8 +12,9 @@ import { toast } from 'react-toastify';
 const Home = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [tag, setTag] = useState('Add-tag');
-  const [showTags, setShowTags] = useState(false); // ✅ State for dropdown visibility
+  const [tag, setTag] = useState('');
+  const [showTags, setShowTags] = useState(false);
+  const [customTag, setCustomTag] = useState('');
 
   const { pasteId } = useParams(); 
   const notes = useSelector((state) => state.notes.notes);
@@ -22,15 +23,16 @@ const Home = () => {
 
   const containerRef = useRef(null);
 
-  // ✅ Explicit color classes to fix Tailwind issue
-  const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
 
-  // ✅ Fetch notes when component loads
+  const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
+  const predefinedTags = ['Future', 'Work', 'Personal', 'Important', 'Reuse'];
+
+
   useEffect(() => {
     dispatch(getNotes());
   }, [dispatch]);
 
-  // ✅ Load existing note if pasteId is available
+
   useEffect(() => {
     if (pasteId) {
       const paste = notes.find((note) => note._id === pasteId);
@@ -45,25 +47,30 @@ const Home = () => {
     }
   }, [notes, pasteId, navigate]);
 
-  // ✅ Handle submission (Add or Edit)
+
   const handleSubmit = () => {
     if (!title.trim() || !content.trim()) {
       toast.error('Title and content cannot be empty!');
       return;
     }
 
+    if (customTag && customTag.length <= 10) {
+      setTag(customTag);
+    }
+
     if (pasteId) {
-      // ✅ Dispatch editNote with correct ID
+
       dispatch(editNote({ id: pasteId, title, content, tag }));
     } else {
-      // ✅ Dispatch addNote to create a new note
+
       dispatch(addNote({ title, content, tag }));
     }
 
-    // ✅ Reset state after submission
+
     setTitle('');
     setContent('');
-    setTag('Add-tag');
+    setTag('');
+    setCustomTag('');
     navigate('/paste');
   };
 
@@ -74,11 +81,11 @@ const Home = () => {
       transition={{ duration: 0.6 }}
       className="mt-10 pt-20 pb-10 flex flex-col container mx-auto px-4 md:px-8 lg:px-16"
     >
-      {/* ✅ Title, Tag & Submit */}
+
       <div className="flex flex-wrap gap-2 justify-center items-center mb-4">
-        {/* ✅ Title Input */}
+
         <input
-          className="w-[50vw] sm:max-w-xs md:max-w-md lg:max-w-lg border rounded p-2 pl-4 bg-gray-100 dark:bg-black font-normal placeholder:text-gray-400 focus:outline-none dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
+          className="w-[50vw] sm:max-w-xs md:max-w-md lg:max-w-lg border rounded p-2 pl-4 bg-gray-100 dark:bg-black placeholder:text-gray-400 focus:outline-none dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
           type="text"
           placeholder="Enter title here"
           value={title}
@@ -86,15 +93,15 @@ const Home = () => {
           required
         />
 
-        {/* ✅ Tag Dropdown with Animation */}
+
         <div className="relative">
-          {/* ✅ Dropdown Header */}
+
           <div 
             className="flex items-center gap-2 border rounded p-2 bg-gray-100 dark:bg-black cursor-pointer transition-all duration-300 ease-in-out hover:border-indigo-500"
             onClick={() => setShowTags(!showTags)}
           >
             <FaHashtag className="text-gray-500 dark:text-gray-400" />
-            <span>{tag}</span>
+            <span className=' text-sm ' >{tag || 'Add-tag'}</span>
             <motion.div
               animate={{ rotate: showTags ? 180 : 0 }}
               transition={{ duration: 0.2 }}
@@ -102,8 +109,7 @@ const Home = () => {
               <FaAnglesDown className="text-gray-500 dark:text-gray-400" />
             </motion.div>
           </div>
-
-          {/* ✅ Animated Dropdown */}
+          
           <AnimatePresence>
             {showTags && (
               <motion.ul
@@ -112,17 +118,26 @@ const Home = () => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
                 className="absolute top-12 left-0 z-10 w-full bg-gray-100 dark:bg-black border border-gray-300 dark:border-gray-700 rounded shadow-md overflow-hidden"
-              >
-                {['Future', 'Work', 'Personal', 'Important', 'Reuse',].map((option) => (
+              >                
+                <li className="p-2">
+                  <input
+                    type="text"
+                    maxLength={10}
+                    placeholder="Enter tag"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                    required
+                    className="w-full border rounded p-1 pl-4 focus:outline-none bg-gray-100 dark:bg-black placeholder:text-gray-400 dark:text-white dark:caret-white"
+                  />
+                </li>
+                {predefinedTags.map((option) => (
                   <li
                     key={option}
                     onClick={() => {
                       setTag(option);
                       setShowTags(false);
                     }}
-                    className={`p-2 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer ${
-                      tag === option ? 'bg-gray-200 dark:bg-gray-800' : ''
-                    }`}
+                    className={`p-2 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer ${tag === option ? 'bg-gray-200 dark:bg-gray-800' : ''}`}
                   >
                     {option}
                   </li>
@@ -132,17 +147,15 @@ const Home = () => {
           </AnimatePresence>
         </div>
 
-        {/* ✅ Submit Button */}
         <motion.button
           onClick={handleSubmit}
-          className="p-2 text-xl border rounded cursor-pointer transition-all duration-300 ease-in-out hover:text-green-600 "
+          className="p-2 text-xl border rounded cursor-pointer transition-all duration-300 ease-in-out hover:text-green-600"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           {pasteId ? <MdEditRoad /> : <FaFileCode />}
         </motion.button>
       </div>
-
       {/* ✅ Code Input Area */}
       <div
         

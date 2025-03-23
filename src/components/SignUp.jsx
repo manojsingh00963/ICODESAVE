@@ -26,7 +26,7 @@ const SignUp = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // ✅ Handle Input Change
+  //  Handle Input Change
   const handleChange = (e) => {
     setCredentials((prev) => ({
       ...prev,
@@ -34,7 +34,7 @@ const SignUp = () => {
     }));
   };
 
-  // ✅ Handle Form Submission
+  //  Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, role , password, cpassword } = credentials;
@@ -60,7 +60,7 @@ const SignUp = () => {
       if (response.data.success) {
         localStorage.setItem("authToken", response.data.authtoken);
         toast.success("Account created successfully! 🎉");
-        navigate("/"); // ✅ Redirect to home after signup
+        navigate("/"); //  Redirect to home after signup
       } else {
         toast.error(response.data.error || "Invalid credentials!");
       }
@@ -83,7 +83,7 @@ const SignUp = () => {
       className="bg-gradient-to-b pt-22  min-w-screen from-[#000000a4] to-gray-800 flex items-center justify-center min-h-screen"
     >
       <div className="w-full max-w-md p-8 bg-black text-white rounded shadow-lg">
-        {/* ✅ Header */}
+        {/*  Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold">Create Your Account</h1>
           <p className="mt-2 p-2 text-gray-400">
@@ -91,9 +91,9 @@ const SignUp = () => {
           </p>
         </div>
 
-        {/* ✅ Form */}
+        {/*  Form */}
         <form onSubmit={handleSubmit} className=" space-y-4">
-          {/* ✅ Name Input */}
+          {/*  Name Input */}
           <input
             type="text"
             name="name"
@@ -104,7 +104,7 @@ const SignUp = () => {
             required
           />
 
-          {/* ✅ Email Input */}
+          {/*  Email Input */}
           <input
             type="email"
             name="email"
@@ -114,7 +114,7 @@ const SignUp = () => {
             className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-          {/* ✅ Profession Input */}
+          {/*  Profession Input */}
           <input
             type="text"
             name="role"
@@ -124,7 +124,7 @@ const SignUp = () => {
             className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-          {/* ✅ Password Input */}
+          {/*  Password Input */}
           <div className="relative">
             <input
               type={showPassword.password ? "text" : "password"}
@@ -150,7 +150,7 @@ const SignUp = () => {
             </button>
           </div>
 
-          {/* ✅ Confirm Password Input */}
+          {/*  Confirm Password Input */}
           <div className="relative">
             <input
               type={showPassword.cpassword ? "text" : "password"}
@@ -176,7 +176,7 @@ const SignUp = () => {
             </button>
           </div>
 
-          {/* ✅ Submit Button */}
+          {/*  Submit Button */}
           <motion.button
             type="submit"
             whileHover={{ scale: 1.05 }}
@@ -191,12 +191,12 @@ const SignUp = () => {
             {loading ? <PulseLoader color="#ffffff" size={8} /> : "Sign Up"}
           </motion.button>
 
-          {/* ✅ Divider */}
+          {/*  Divider */}
           <div className="flex items-center justify-center space-x-2">
             <span className="text-gray-400">Or</span>
           </div>
 
-          {/* ✅ Navigate to Log In */}
+          {/*  Navigate to Log In */}
           <div className="flex items-center justify-center">
             <p className="text-gray-400 ">Already have an account?</p>
             <Link to="/login" className="text-blue-400 cursor-pointer hover:underline ml-1">

@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
     if (!token) {
       setShowMessage(true);
       
-      toast.error('Please login first'); // ✅ Show toast message
+      toast.info('Please login first'); // ✅ Show toast message
     }
   }, [token]);
 

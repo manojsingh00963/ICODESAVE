@@ -12,22 +12,23 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // ✅ Check login status from token
+
+  //Check login status from token
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     console.log(token);
     setIsLoggedIn(token ? true : false);
   }, []);
 
-  // ✅ Handle logout+
-  const handleLogout = () => {
-    localStorage.removeItem('auth-token');
-    setIsLoggedIn(false);
-    setDropdownOpen(false);
-  };
+  //Handle logout+
+  // const handleLogout = () => {
+  //   localStorage.removeItem('auth-token');
+  //   setIsLoggedIn(false);
+  //   setDropdownOpen(false);
+  // };
 
   return (
-    <nav className="fixed z-20 top-4 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[500px] bg-white/40 border-t border-b border-purple-200 backdrop-blur-md p-3 rounded shadow-lg flex justify-between items-center">
+    <nav className=" absolute z-20 top-4 left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[500px] bg-white/40 border-t border-b border-purple-200 backdrop-blur-md p-3 rounded shadow-lg flex justify-between items-center">
 
       {/* 🍔 Hamburger Menu for Small Screens */}
       <button
@@ -96,19 +97,21 @@ const Navbar = () => {
       {/* 👤 Profile OR Login/Signup */}
       <div className="relative ">
         {isLoggedIn ? (
-          // ✅ If logged in, show Profile dropdown
-          <>
-            <button
+          //If logged in, show Profile dropdown
+          <div>
+
+            <NavLink
+              to="/profile"
+              className="text-lg text-gray-800 hover:text-[#84bef0] transition duration-300 flex items-center gap-1"
+            >
+              <ImProfile size={24} />
+            </NavLink>
+
+            {/* <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center cursor-pointer gap-2 text-gray-800 hover:text-[#84bef0] transition duration-300"
-            >
-              <NavLink
-                to="/profile"
-                className="text-lg text-gray-800 hover:text-[#84bef0] transition duration-300 flex items-center gap-1"
-              >
-                <ImProfile size={24} />
-              </NavLink>
-            </button>
+            > */}
+            {/* </button> */}
 
             {/* <AnimatePresence>
               {dropdownOpen && (
@@ -136,9 +139,9 @@ const Navbar = () => {
                 </motion.div>
               )}
             </AnimatePresence> */}
-          </>
+          </div>
         ) : (
-          // ✅ If NOT logged in, show Login and Signup
+          //If NOT logged in, show Login and Signup
           <div className="flex gap-3">
             <NavLink
               to="/login"

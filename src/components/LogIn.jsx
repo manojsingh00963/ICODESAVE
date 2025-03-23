@@ -5,24 +5,24 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
-import axios from "axios"; // ✅ Import Axios
+import axios from "axios"; //Import Axios
 import "react-toastify/dist/ReactToastify.css";
 
 const LogIn = () => {
   const navigate = useNavigate();
 
-  // ✅ State Management
+  //State Management
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // ✅ Handle Input Change
+  //Handle Input Change
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle Form Submission
+  //Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -46,11 +46,11 @@ const LogIn = () => {
       );
 
       if (response.data.authToken) {
-        localStorage.setItem("authToken", response.data.authToken); // ✅ Store token in localStorage
+        localStorage.setItem("authToken", response.data.authToken); //Store token in localStorage
         toast.success("Successfully logged in!");
         navigate("/");
 
-        // ✅ Optional: Set "remember me" in localStorage
+        //Optional: Set "remember me" in localStorage
         if (rememberMe) {
           localStorage.setItem("rememberMe", email);
         }
@@ -67,7 +67,7 @@ const LogIn = () => {
     }
   };
 
-  // ✅ Handle Remember Me (Load from localStorage)
+  //Handle Remember Me (Load from localStorage)
   React.useEffect(() => {
     const savedEmail = localStorage.getItem("rememberMe");
     if (savedEmail) {
@@ -85,7 +85,7 @@ const LogIn = () => {
       className="bg-gradient-to-b pt-22 from-[#000000a4] to-gray-800 flex items-center justify-center min-h-screen"
     >
       <div className="w-full max-w-md p-8 space-y-6 bg-black text-white rounded-lg shadow-lg">
-        {/* ✅ Header */}
+        {/*Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold">Welcome Back!</h1>
           <p className="mt-2 text-gray-400">
@@ -93,9 +93,9 @@ const LogIn = () => {
           </p>
         </div>
 
-        {/* ✅ Form */}
+        {/*Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* ✅ Email Input */}
+          {/*Email Input */}
           <input
             type="email"
             name="email"
@@ -106,7 +106,7 @@ const LogIn = () => {
             required
           />
 
-          {/* ✅ Password Input */}
+          {/*Password Input */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -126,7 +126,7 @@ const LogIn = () => {
             </button>
           </div>
 
-          {/* ✅ Remember Me and Forgot Password */}
+          {/*Remember Me and Forgot Password */}
           {/* <div className="flex items-center justify-between">
             <label className="flex items-center text-gray-400">
               <input
@@ -142,7 +142,7 @@ const LogIn = () => {
             </Link>
           </div> */}
 
-          {/* ✅ Submit Button */}
+          {/*Submit Button */}
           <motion.button
             type="submit"
             whileHover={{ scale: 1.05 }}
@@ -157,12 +157,12 @@ const LogIn = () => {
             {loading ? <PulseLoader color="#ffffff" size={8} /> : "Log In"}
           </motion.button>
 
-          {/* ✅ Divider */}
+          {/*Divider */}
           <div className="flex items-center justify-center space-x-2">
             <span className="text-gray-400">Or</span>
           </div>
 
-          {/* ✅ Navigate to Sign Up */}
+          {/*Navigate to Sign Up */}
           <div className="flex items-center justify-center">
             <p className="text-gray-400">Don't have an account?</p>
             <Link to="/signup" className="text-blue-400 hover:underline ml-1">
