@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const host = 'http://localhost:5000';
 
-// ✅ Get all notes
+// Get all notes
 export const getNotes = createAsyncThunk('notes/getNotes', async (_, { rejectWithValue }) => {
   const token = localStorage.getItem('authToken');
 
@@ -17,7 +17,7 @@ export const getNotes = createAsyncThunk('notes/getNotes', async (_, { rejectWit
     const response = await axios.get(`${host}/api/notes/fetchnotes`, {
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': token, // ✅ No need for Bearer prefix
+        'authToken': token, // No need for Bearer prefix
       },
     });
 
@@ -29,7 +29,7 @@ export const getNotes = createAsyncThunk('notes/getNotes', async (_, { rejectWit
   }
 });
 
-// ✅ Add a note
+// Add a note
 export const addNote = createAsyncThunk(
   'notes/addNote',
   async ({ title, content, tag }, { rejectWithValue }) => {
@@ -47,12 +47,12 @@ export const addNote = createAsyncThunk(
         {
           headers: {
             'Content-Type': 'application/json',
-            'auth-token': token,
+            'authToken': token,
           },
         }
       );
 
-      toast.success('Note added successfully!');
+      toast.success('Copy-Code successfully!');
       return response.data;
     } catch (error) {
       console.error('Add Error:', error);
@@ -62,7 +62,7 @@ export const addNote = createAsyncThunk(
   }
 );
 
-// ✅ Delete a note
+// Delete a note
 export const deleteNote = createAsyncThunk(
   'notes/deleteNote',
   async (id, { rejectWithValue }) => {
@@ -77,11 +77,11 @@ export const deleteNote = createAsyncThunk(
       await axios.delete(`${host}/api/notes/deletenote/${id}`, {
         headers: {
           'Content-Type': 'application/json',
-          'auth-token': token,
+          'authToken': token,
         },
       });
 
-      toast.success('Note deleted successfully!');
+      toast.success('Code deleted successfully!');
       return id;
     } catch (error) {
       console.error('Delete Error:', error);
@@ -91,7 +91,7 @@ export const deleteNote = createAsyncThunk(
   }
 );
 
-// ✅ Edit a note
+// Edit a note
 export const editNote = createAsyncThunk(
   'notes/editNote',
   async ({ id, title, content, tag }, { rejectWithValue }) => {
@@ -109,12 +109,12 @@ export const editNote = createAsyncThunk(
         {
           headers: {
             'Content-Type': 'application/json',
-            'auth-token': token,
+            'authToken': token,
           },
         }
       );
 
-      toast.success('Note updated successfully!');
+      toast.success('Code updated successfully!');
       return response.data;
     } catch (error) {
       console.error('Update Error:', error);
@@ -124,26 +124,26 @@ export const editNote = createAsyncThunk(
   }
 );
 
-// ✅ Initial state
+// Initial state
 const initialState = {
   notes: [],
   loading: false,
   error: null,
 };
 
-// ✅ Create Slice
+// Create Slice
 export const noteSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
     resetNotes: (state) => {
       state.notes = [];
-      toast.info('All notes cleared');
+      toast.info('All cleared');
     },
   },
   extraReducers: (builder) => {
     builder
-      // ✅ Get Notes
+      // Get Notes
       .addCase(getNotes.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -157,17 +157,17 @@ export const noteSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ✅ Add Note
+      // Add Note
       .addCase(addNote.fulfilled, (state, action) => {
         state.notes.unshift(action.payload);
       })
 
-      // ✅ Delete Note
+      // Delete Note
       .addCase(deleteNote.fulfilled, (state, action) => {
         state.notes = state.notes.filter((note) => note._id !== action.payload);
       })
 
-      // ✅ Edit Note
+      // Edit Note
       .addCase(editNote.fulfilled, (state, action) => {
         const index = state.notes.findIndex(
           (note) => note._id === action.payload._id

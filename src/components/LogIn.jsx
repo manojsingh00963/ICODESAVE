@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
 import axios from "axios"; //Import Axios
 import "react-toastify/dist/ReactToastify.css";
+import { Hourglass } from "react-loader-spinner";
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const LogIn = () => {
     >
       <div className="w-full max-w-md p-8 space-y-6 bg-black text-white rounded-lg shadow-lg">
         {/*Header */}
-        <div className="text-center">
+        <div className="text-center relative ">
           <h1 className="text-3xl font-bold">Welcome Back!</h1>
           <p className="mt-2 text-gray-400">
             Sign in to your account to continue.
@@ -147,11 +148,10 @@ const LogIn = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white cursor-pointer rounded-md ${
-              loading
+            className={`w-full py-2 bg-gradient-to-r from-blue-400 to-purple-500 text-white cursor-pointer rounded-md ${loading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-gradient-to-r from-blue-500 to-purple-600"
-            }`}
+              }`}
             disabled={loading}
           >
             {loading ? <PulseLoader color="#ffffff" size={8} /> : "Log In"}

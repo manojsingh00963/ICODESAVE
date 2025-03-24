@@ -25,6 +25,7 @@ function App() {
       {showAnimation ? <StartAnimate /> : <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-[#000054e4] to-[#c290fbd8] text-white relative">
         {/* Toast Notifications */}
         <ToastContainer
+        stacked
           position="top-center"
           autoClose={2000}
           hideProgressBar={false}
@@ -33,7 +34,7 @@ function App() {
           pauseOnFocusLoss={false}
           draggable={true}
           pauseOnHover={true}
-          theme="light"
+          theme="dark"
         />
         <Navbar />
         <Outlet />

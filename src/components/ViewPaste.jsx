@@ -115,7 +115,7 @@ const ViewPaste = () => {
   const handleShare = () => {
     const url = `${window.location.origin}/view/${pasteId}`;
     navigator.clipboard.writeText(url);
-    toast.success('Paste link copied to clipboard!');
+    toast.success(' link copied to clipboard!');
   };
 
   //If paste not found, prevent rendering

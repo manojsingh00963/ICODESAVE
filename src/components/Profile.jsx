@@ -60,10 +60,10 @@ const Profile = () => {
   const fetchUserData = async (token) => {
     try {
       setState((prev) => ({ ...prev, loading: true }));
-
       const { data } = await axios.get("http://localhost:5000/api/auth/getuser", {
         headers: { authToken: token },
       });
+      console.log(data)
 
       const updatedData = {
         name: data.name || "John Doe",

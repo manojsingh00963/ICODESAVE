@@ -5,10 +5,12 @@ dotenv.config();
 
 const connectToMongo = async () => {
   try {
+    // eslint-disable-next-line no-undef
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB successfully!');
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error.message);
+    // eslint-disable-next-line no-undef
     process.exit(1);
   }
 };

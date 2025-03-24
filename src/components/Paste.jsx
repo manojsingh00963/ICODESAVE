@@ -7,16 +7,24 @@ import { toast } from 'react-toastify';
 import { NavLink } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import { showConfirm } from '../redux/features/confirmSlice';
+import { MagnifyingGlass } from 'react-loader-spinner';
 
 const Paste = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useDispatch();
   const notes = useSelector((state) => state.notes.notes);
+  const [loading, setLoading] = useState(false)
 
   // Fetch notes from Redux state
   useEffect(() => {
-    dispatch(getNotes());
-  }, [dispatch]);
+    const time = setTimeout(() => {
+      setLoading(true)
+    }, 2000);
+    clearTimeout(time)
+    dispatch(getNotes(),loading);
+    setLoading(false)
+  }, [dispatch,loading]);
 
   // Filter notes based on search term
   const filteredNotes = notes.filter((note) =>
@@ -25,16 +33,18 @@ const Paste = () => {
 
   // Handle delete
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      dispatch(deleteNote(id));
-    }
+    dispatch(showConfirm({
+      massage: "Are you sure you want to delete this note?",
+      onConfirm: () => dispatch(deleteNote(id)),
+      color: "#e63946", // can Customizable color
+    }))
   };
 
   // Handle share
   const handleShare = (id) => {
     const url = `${window.location.origin}/view/${id}`;
     navigator.clipboard.writeText(url);
-    toast.success('Paste link copied to clipboard!');
+    toast.success(' link copied to clipboard!');
   };
 
   // Handle copy
@@ -44,12 +54,16 @@ const Paste = () => {
   };
 
   return (
+
+
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="mt-24 mx-auto max-w-7xl px-4"
     >
+
+
       {/*Search Input */}
       <div className="flex items-center justify-center mb-6">
         <div className="relative w-full max-w-lg">
@@ -64,6 +78,19 @@ const Paste = () => {
         </div>
       </div>
 
+      {loading ? <div className="absolute z-10 top-40 right-1/2 ">
+        <MagnifyingGlass
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="magnifying-glass-loading"
+          wrapperStyle={{}}
+          wrapperClass="magnifying-glass-wrapper"
+          glassColor="#a1e3f9b1"
+          color="#7547ffa5" />
+      </div> : <></>}
+
+
       {/*Notes Grid */}
       <div className="grid mx-auto w-[80vw] grid-cols-1 md:grid-cols-3 gap-4">
         {filteredNotes.map((note) => (
@@ -77,10 +104,10 @@ const Paste = () => {
           >
             {/*Title */}
             <h3 className="text-lg font-bold truncate">{note.title}</h3>
-            
+
             {/*Content Preview */}
             <p className="text-gray-400 truncate">{note.content}</p>
-<code className=' absolute right-2 top-2 underline underline-offset-2 text-blue-200 ' >{note.tag}</code>
+            <code className=' absolute right-2 top-2 underline underline-offset-2 text-blue-200 ' >{note.tag}</code>
             {/*Date */}
             <cite className="block text-gray-500 text-sm mt-2">
               {new Date(note.createdAt).toLocaleDateString()}

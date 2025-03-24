@@ -9,6 +9,7 @@ const router = express.Router();
 
 // NOTE It is a good practice to keep JWT secret in the code. Use .env file.
 
+// eslint-disable-next-line no-undef
 const JWT_SECRET = process.env.JWT_SECRET ;
 
 // ROUTE 1: Create a user using POST "/api/auth/createUser". No login required
@@ -109,7 +110,8 @@ router.post('/login', [
 });
 
 // ROUTE 3: Get logged-in user details using POST "/api/auth/getuser". Login required
-router.post('/getuser', fetchuser, async (req, res) => {
+router.get('/getuser', fetchuser, async (req, res) => {
+    console.log(req.authToken)
     try {
         const userId = req.user.id;
         const user = await User.findById(userId).select('-password');

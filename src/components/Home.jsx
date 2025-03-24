@@ -53,6 +53,11 @@ const Home = () => {
       toast.error('Title and content cannot be empty!');
       return;
     }
+    
+    if (!tag.trim()){
+      toast.error('Please Add-Tag !');
+      return
+    }
 
     if (customTag && customTag.length <= 10) {
       setTag(customTag);
@@ -101,7 +106,7 @@ const Home = () => {
             onClick={() => setShowTags(!showTags)}
           >
             <FaHashtag className="text-gray-500 dark:text-gray-400" />
-            <span className=' text-sm ' >{tag || 'Add-tag'}</span>
+            <span className=' text-sm ' >{tag || 'Add-Tag'}</span>
             <motion.div
               animate={{ rotate: showTags ? 180 : 0 }}
               transition={{ duration: 0.2 }}
@@ -156,12 +161,12 @@ const Home = () => {
           {pasteId ? <MdEditRoad /> : <FaFileCode />}
         </motion.button>
       </div>
-      {/* ✅ Code Input Area */}
+      {/*  Code Input Area */}
       <div
         
         className="relative bg-gray-100 dark:bg-black border border-t-4 mt-4 mx-auto w-full max-w-2xl rounded"
       >
-        {/* ✅ Drag Handles */}
+        {/*  Drag Handles */}
         <div ref={containerRef} className="flex p-2 gap-2 ">
           {colors.map((color) => (
             <motion.div
@@ -175,19 +180,19 @@ const Home = () => {
           ))}
         </div>
 
-        {/* ✅ Code Slash Icon */}
+        {/*  Code Slash Icon */}
         <BsCodeSlash className="absolute top-2 right-2 text-gray-500 dark:text-gray-400 cursor-pointer transition-all duration-300 hover:text-indigo-500" />
 
-        {/* ✅ Code Editor */}
+        {/*  Code Editor */}
         <div className="flex border-t">
-          {/* ✅ Line Numbers */}
+          {/*  Line Numbers */}
           <aside className="w-10 text-right pr-2 pt-4 text-gray-500 dark:text-gray-400 border-r border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
             {content.split('\n').map((_, index) => (
               <div key={index}>{index + 1}</div>
             ))}
           </aside>
 
-          {/* ✅ Textarea */}
+          {/*  Textarea */}
           <textarea
             value={content}
             placeholder="Enter code here"
