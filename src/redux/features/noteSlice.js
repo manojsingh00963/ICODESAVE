@@ -1,128 +1,57 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-
-const host = 'http://localhost:5000';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
 // Get all notes
-export const getNotes = createAsyncThunk('notes/getNotes', async (_, { rejectWithValue }) => {
-  const token = localStorage.getItem('authToken');
-
-  if (!token) {
-    toast.error('Authorization token is missing!');
-    return rejectWithValue('No token found');
-  }
-
+export const getNotes = createAsyncThunk("notes/getNotes", async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get(`${host}/api/notes/fetchnotes`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'authToken': token, // No need for Bearer prefix
-      },
-    });
-
+    const response = await axios.get("/notes/fetchnotes");
     return response.data;
   } catch (error) {
-    console.error('Fetch Error:', error);
-    toast.error(error.response?.data?.message || 'Failed to fetch notes');
-    return rejectWithValue(error.response?.data?.message || 'Failed to fetch notes');
+    console.error("Fetch Error:", error);
+    toast.error(error.response?.data?.message || "Failed to fetch notes");
+    return rejectWithValue(error.response?.data?.message || "Failed to fetch notes");
   }
 });
 
 // Add a note
-export const addNote = createAsyncThunk(
-  'notes/addNote',
-  async ({ title, content, tag }, { rejectWithValue }) => {
-    const token = localStorage.getItem('authToken');
-
-    if (!token) {
-      toast.error('Authorization token is missing!');
-      return rejectWithValue('No token found');
-    }
-
-    try {
-      const response = await axios.post(
-        `${host}/api/notes/addnote`,
-        { title, content, tag },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'authToken': token,
-          },
-        }
-      );
-
-      toast.success('Copy-Code successfully!');
-      return response.data;
-    } catch (error) {
-      console.error('Add Error:', error);
-      toast.error(error.response?.data?.message || 'Failed to add note');
-      return rejectWithValue(error.response?.data?.message || 'Failed to add note');
-    }
+export const addNote = createAsyncThunk("notes/addNote", async ({ title, content, tag }, { rejectWithValue }) => {
+  try {
+    const response = await axios.post("/notes/addnote", { title, content, tag });
+    toast.success("Copy-Code successfully!");
+    return response.data;
+  } catch (error) {
+    console.error("Add Error:", error);
+    toast.error(error.response?.data?.message || "Failed to add note");
+    return rejectWithValue(error.response?.data?.message || "Failed to add note");
   }
-);
+});
 
 // Delete a note
-export const deleteNote = createAsyncThunk(
-  'notes/deleteNote',
-  async (id, { rejectWithValue }) => {
-    const token = localStorage.getItem('authToken');
-
-    if (!token) {
-      toast.error('Authorization token is missing!');
-      return rejectWithValue('No token found');
-    }
-
-    try {
-      await axios.delete(`${host}/api/notes/deletenote/${id}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'authToken': token,
-        },
-      });
-
-      toast.success('Code deleted successfully!');
-      return id;
-    } catch (error) {
-      console.error('Delete Error:', error);
-      toast.error(error.response?.data?.message || 'Failed to delete note');
-      return rejectWithValue(error.response?.data?.message || 'Failed to delete note');
-    }
+export const deleteNote = createAsyncThunk("notes/deleteNote", async (id, { rejectWithValue }) => {
+  try {
+    await axios.delete(`/notes/deletenote/${id}`);
+    toast.success("Code deleted successfully!");
+    return id;
+  } catch (error) {
+    console.error("Delete Error:", error);
+    toast.error(error.response?.data?.message || "Failed to delete note");
+    return rejectWithValue(error.response?.data?.message || "Failed to delete note");
   }
-);
+});
 
 // Edit a note
-export const editNote = createAsyncThunk(
-  'notes/editNote',
-  async ({ id, title, content, tag }, { rejectWithValue }) => {
-    const token = localStorage.getItem('authToken');
-
-    if (!token) {
-      toast.error('Authorization token is missing!');
-      return rejectWithValue('No token found');
-    }
-
-    try {
-      const response = await axios.put(
-        `${host}/api/notes/updatenote/${id}`,
-        { title, content, tag },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'authToken': token,
-          },
-        }
-      );
-
-      toast.success('Code updated successfully!');
-      return response.data;
-    } catch (error) {
-      console.error('Update Error:', error);
-      toast.error(error.response?.data?.message || 'Failed to update note');
-      return rejectWithValue(error.response?.data?.message || 'Failed to update note');
-    }
+export const editNote = createAsyncThunk("notes/editNote", async ({ id, title, content, tag }, { rejectWithValue }) => {
+  try {
+    const response = await axios.put(`/notes/updatenote/${id}`, { title, content, tag });
+    toast.success("Code updated successfully!");
+    return response.data;
+  } catch (error) {
+    console.error("Update Error:", error);
+    toast.error(error.response?.data?.message || "Failed to update note");
+    return rejectWithValue(error.response?.data?.message || "Failed to update note");
   }
-);
+});
 
 // Initial state
 const initialState = {
@@ -133,12 +62,12 @@ const initialState = {
 
 // Create Slice
 export const noteSlice = createSlice({
-  name: 'notes',
+  name: "notes",
   initialState,
   reducers: {
     resetNotes: (state) => {
       state.notes = [];
-      toast.info('All cleared');
+      toast.info("All cleared");
     },
   },
   extraReducers: (builder) => {
@@ -169,9 +98,7 @@ export const noteSlice = createSlice({
 
       // Edit Note
       .addCase(editNote.fulfilled, (state, action) => {
-        const index = state.notes.findIndex(
-          (note) => note._id === action.payload._id
-        );
+        const index = state.notes.findIndex((note) => note._id === action.payload._id);
         if (index !== -1) {
           state.notes[index] = action.payload;
         }
@@ -180,5 +107,4 @@ export const noteSlice = createSlice({
 });
 
 export const { resetNotes } = noteSlice.actions;
-
 export default noteSlice.reducer;

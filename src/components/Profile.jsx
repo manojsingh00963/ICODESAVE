@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaStar, FaEdit, FaSignOutAlt, FaUserEdit, FaCommentDots } from "react-icons/fa";
 import { BsSun, BsMoon } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axiosinstance";
 import { toast } from "react-toastify";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
@@ -60,7 +60,7 @@ const Profile = () => {
   const fetchUserData = async (token) => {
     try {
       setState((prev) => ({ ...prev, loading: true }));
-      const { data } = await axios.get("http://localhost:5000/api/auth/getuser", {
+      const { data } = await axios.get("/auth/getuser", {
         headers: { authToken: token },
       });
       console.log(data)

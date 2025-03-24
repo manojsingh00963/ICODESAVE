@@ -113,7 +113,7 @@ json
 
 CopyEdit
 
-`{   "auth-token": "your-jwt-token" }`
+`{   "authToken": "your-jwt-token" }`
 
 **Response:**
 

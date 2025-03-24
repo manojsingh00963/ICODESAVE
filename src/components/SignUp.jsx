@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axiosinstance";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
@@ -53,7 +53,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/createUser",
+        "/auth/createUser",
         { name, email, role, password }
       );
 

@@ -5,9 +5,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { PulseLoader } from "react-spinners";
-import axios from "axios"; //Import Axios
+
 import "react-toastify/dist/ReactToastify.css";
-import { Hourglass } from "react-loader-spinner";
+import axios from "../utils/axiosinstance";
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -36,8 +36,7 @@ const LogIn = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+      const response = await axios.post("/auth/login",
         { email, password },
         {
           headers: {

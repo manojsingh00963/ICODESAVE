@@ -13,6 +13,7 @@ const fetchuser = (req, res, next) => {
         const data = jwt.verify(token, JWT_SECRET);
         req.user = data.user;
         next();
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
         res.status(401).send({ error: 'Please authenticate using a valid token' });
     }

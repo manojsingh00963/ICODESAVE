@@ -25,7 +25,7 @@ const Home = () => {
 
 
   const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
-  const predefinedTags = ['Future', 'Work', 'Personal', 'Important', 'Reuse'];
+  const predefinedTags = ['Code', 'Work', 'Personal', 'Important', 'Reuse'];
 
 
   useEffect(() => {
