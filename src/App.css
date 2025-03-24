@@ -16,7 +16,7 @@
   width: 100vw;
   height: 100vh;
   background: url('/Coding.jpeg') center/cover no-repeat;
-  filter: blur(8px); /* ✅ Blur only the background */
+  filter: blur(8px); /*  Blur only the background */
   z-index: -1;
 }
 
