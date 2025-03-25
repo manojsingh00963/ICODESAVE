@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { hideConfirm } from "../redux/features/confirmSlice";
 

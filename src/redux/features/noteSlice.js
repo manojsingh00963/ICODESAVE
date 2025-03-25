@@ -3,7 +3,7 @@ import axios from "../../utils/axiosinstance";
 import { toast } from "react-toastify";
 
 // Get all notes
-export const getNotes = createAsyncThunk("notes/getNotes", async (_, { rejectWithValue }) => {
+export const getNotes = createAsyncThunk("/api/notes/getNotes", async (_, { rejectWithValue }) => {
   try {
     const response = await axios.get("/api/notes/fetchnotes");
     return response.data;
@@ -15,7 +15,7 @@ export const getNotes = createAsyncThunk("notes/getNotes", async (_, { rejectWit
 });
 
 // Add a note
-export const addNote = createAsyncThunk("notes/addNote", async ({ title, content, tag }, { rejectWithValue }) => {
+export const addNote = createAsyncThunk("/api/notes/addNote", async ({ title, content, tag }, { rejectWithValue }) => {
   try {
     const response = await axios.post("/api/notes/addnote", { title, content, tag });
     toast.success("Copy-Code successfully!");
@@ -28,7 +28,7 @@ export const addNote = createAsyncThunk("notes/addNote", async ({ title, content
 });
 
 // Delete a note
-export const deleteNote = createAsyncThunk("notes/deleteNote", async (id, { rejectWithValue }) => {
+export const deleteNote = createAsyncThunk("/api/notes/deleteNote", async (id, { rejectWithValue }) => {
   try {
     await axios.delete(`/api/notes/deletenote/${id}`);
     toast.success("Code deleted successfully!");
@@ -41,7 +41,7 @@ export const deleteNote = createAsyncThunk("notes/deleteNote", async (id, { reje
 });
 
 // Edit a note
-export const editNote = createAsyncThunk("notes/editNote", async ({ id, title, content, tag }, { rejectWithValue }) => {
+export const editNote = createAsyncThunk("/api/notes/editNote", async ({ id, title, content, tag }, { rejectWithValue }) => {
   try {
     const response = await axios.put(`/api/notes/updatenote/${id}`, { title, content, tag });
     toast.success("Code updated successfully!");

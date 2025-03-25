@@ -34,8 +34,8 @@ const Paste = () => {
   // Handle delete
   const handleDelete = (id) => {
     dispatch(showConfirm({
-      massage: "Are you sure you want to delete this note?",
       onConfirm: () => dispatch(deleteNote(id)),
+      message: "Are you sure you want to delete this note?",
       color: "#e63946", // can Customizable color
     }))
   };
