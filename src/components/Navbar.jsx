@@ -10,13 +10,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  // const [dropdownOpen, setDropdownOpen] = useState(false);
 
 
   //Check login status from token
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    console.log(token);
     setIsLoggedIn(token ? true : false);
   }, []);
 
