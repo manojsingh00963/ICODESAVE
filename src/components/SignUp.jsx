@@ -53,7 +53,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "/auth/createUser",
+        "/api/auth/createUser",
         { name, email, role, password }
       );
 

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 // Get all notes
 export const getNotes = createAsyncThunk("notes/getNotes", async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get("/notes/fetchnotes");
+    const response = await axios.get("/api/notes/fetchnotes");
     return response.data;
   } catch (error) {
     console.error("Fetch Error:", error);
@@ -17,7 +17,7 @@ export const getNotes = createAsyncThunk("notes/getNotes", async (_, { rejectWit
 // Add a note
 export const addNote = createAsyncThunk("notes/addNote", async ({ title, content, tag }, { rejectWithValue }) => {
   try {
-    const response = await axios.post("/notes/addnote", { title, content, tag });
+    const response = await axios.post("/api/notes/addnote", { title, content, tag });
     toast.success("Copy-Code successfully!");
     return response.data;
   } catch (error) {
@@ -30,7 +30,7 @@ export const addNote = createAsyncThunk("notes/addNote", async ({ title, content
 // Delete a note
 export const deleteNote = createAsyncThunk("notes/deleteNote", async (id, { rejectWithValue }) => {
   try {
-    await axios.delete(`/notes/deletenote/${id}`);
+    await axios.delete(`/api/notes/deletenote/${id}`);
     toast.success("Code deleted successfully!");
     return id;
   } catch (error) {
@@ -43,7 +43,7 @@ export const deleteNote = createAsyncThunk("notes/deleteNote", async (id, { reje
 // Edit a note
 export const editNote = createAsyncThunk("notes/editNote", async ({ id, title, content, tag }, { rejectWithValue }) => {
   try {
-    const response = await axios.put(`/notes/updatenote/${id}`, { title, content, tag });
+    const response = await axios.put(`/api/notes/updatenote/${id}`, { title, content, tag });
     toast.success("Code updated successfully!");
     return response.data;
   } catch (error) {
