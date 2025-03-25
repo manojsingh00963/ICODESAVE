@@ -8,6 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { editNote, addNote, getNotes } from '../redux/features/noteSlice';
 import { toast } from 'react-toastify';
+import { Blocks } from 'react-loader-spinner';
 
 const Home = () => {
   const [title, setTitle] = useState('');
@@ -16,13 +17,14 @@ const Home = () => {
   const [showTags, setShowTags] = useState(false);
   const [customTag, setCustomTag] = useState('');
 
-  const { pasteId } = useParams(); 
+  const { pasteId } = useParams();
   const notes = useSelector((state) => state.notes.notes);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const containerRef = useRef(null);
 
+  const [loading, setLoading] = useState(false)
 
   const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
   const predefinedTags = ['Code', 'Work', 'Personal', 'Important', 'Reuse'];
@@ -49,35 +51,40 @@ const Home = () => {
 
 
   const handleSubmit = () => {
-    if (!title.trim() || !content.trim()) {
-      toast.error('Title and content cannot be empty!');
-      return;
-    }
-    
-    if (!tag.trim()){
-      toast.error('Please Add-Tag !');
-      return
-    }
+    setLoading(true); // Set loading before starting the process
 
-    if (customTag && customTag.length <= 10) {
-      setTag(customTag);
-    }
+    setTimeout(() => {
+      if (!title.trim() || !content.trim()) {
+        toast.error('Title and content cannot be empty!');
+        setLoading(false); // Stop loading on validation failure
+        return;
+      }
 
-    if (pasteId) {
+      if (!tag.trim()) {
+        toast.error('Please Add-Tag!');
+        setLoading(false);
+        return;
+      }
 
-      dispatch(editNote({ id: pasteId, title, content, tag }));
-    } else {
+      if (customTag && customTag.length <= 10) {
+        setTag(customTag);
+      }
 
-      dispatch(addNote({ title, content, tag }));
-    }
+      if (pasteId) {
+        dispatch(editNote({ id: pasteId, title, content, tag }));
+      } else {
+        dispatch(addNote({ title, content, tag }));
+      }
 
-
-    setTitle('');
-    setContent('');
-    setTag('');
-    setCustomTag('');
-    navigate('/paste');
+      setTitle('');
+      setContent('');
+      setTag('');
+      setCustomTag('');
+      navigate('/paste');
+      setLoading(false); // Stop loading after completion
+    }, 1000);
   };
+
 
   return (
     <motion.div
@@ -86,6 +93,20 @@ const Home = () => {
       transition={{ duration: 0.6 }}
       className="mt-10 pt-20 pb-10 flex flex-col container mx-auto px-4 md:px-8 lg:px-16"
     >
+      <div className="loader absolute top-56 left-[45%] z-20  ">
+
+      {loading && (
+        <Blocks
+        height="80"
+        width="80"
+        color="#4fa94d"
+        ariaLabel="blocks-loading"
+        wrapperStyle={{}}
+        wrapperClass="blocks-wrapper"
+        visible={true}
+        />
+      )}
+      </div>
 
       <div className="flex flex-wrap gap-2 justify-center items-center mb-4">
 
@@ -101,7 +122,7 @@ const Home = () => {
 
         <div className="relative">
 
-          <div 
+          <div
             className="flex items-center gap-2 border rounded p-2 bg-gray-100 dark:bg-black cursor-pointer transition-all duration-300 ease-in-out hover:border-indigo-500"
             onClick={() => setShowTags(!showTags)}
           >
@@ -114,7 +135,7 @@ const Home = () => {
               <FaAnglesDown className="text-gray-500 dark:text-gray-400" />
             </motion.div>
           </div>
-          
+
           <AnimatePresence>
             {showTags && (
               <motion.ul
@@ -123,7 +144,7 @@ const Home = () => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
                 className="absolute top-12 left-0 z-10 w-full bg-gray-100 dark:bg-black border border-gray-300 dark:border-gray-700 rounded shadow-md overflow-hidden"
-              >                
+              >
                 <li className="p-2">
                   <input
                     type="text"
@@ -163,7 +184,7 @@ const Home = () => {
       </div>
       {/*  Code Input Area */}
       <div
-        
+
         className="relative bg-gray-100 dark:bg-black border border-t-4 mt-4 mx-auto w-full max-w-2xl rounded"
       >
         {/*  Drag Handles */}
