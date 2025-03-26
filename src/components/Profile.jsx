@@ -63,8 +63,7 @@ const Profile = () => {
       const { data } = await axios.get("/api/auth/getuser", {
         headers: { authToken: token },
       });
-      console.log(data)
-
+      
       const updatedData = {
         name: data.name || "John Doe",
         profession: data.role || "Software Developer",
@@ -96,7 +95,7 @@ const Profile = () => {
         setState((prev) => ({
           ...prev,
           file: reader.result,
-          userData: { ...prev.userData, avatar: reader.result },
+          feedback: { ...prev.userData, avatar: reader.result },
         }));
 
         localStorage.setItem(
@@ -133,22 +132,40 @@ const Profile = () => {
   };
 
   //  Handle Feedback Submission
-  const handleFeedbackSubmit = (e) => {
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
+  
     if (!state.rating || !state.feedback) {
-      alert("Please provide a rating and feedback");
+      toast.error("Please provide a rating and feedback");
       return;
     }
-
-    console.log("Feedback submitted:", { rating: state.rating, feedback: state.feedback });
-    setState((prev) => ({
-      ...prev,
-      showFeedback: false,
-      rating: 0,
-      feedback: "",
-    }));
-    toast.success("Feedback submitted successfully!");
+  
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await axios.post(
+        "/api/feedback/submit",
+        { rating: state.rating, feedback: state.feedback },
+        { headers: { authToken: token } }
+      );
+  
+      if (response.status === 201 && response.data) {
+        toast.success("Feedback submitted successfully!");
+        setState((prev) => ({
+          ...prev,
+          showFeedback: false,
+          rating: 0,
+          feedback: "",
+        }));
+      } else {
+        toast.error("Unexpected response from server");
+      }
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      toast.error("Something went wrong");
+    }
   };
+  
+
 
   return (
     <motion.div
