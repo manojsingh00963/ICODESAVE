@@ -73,7 +73,7 @@ const Paste = () => {
             placeholder="Search notes..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border rounded-md p-2 pl-10 focus:outline-none bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="w-full border rounded-md p-2 pl-10 focus:outline-none bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-white"
           />
         </div>
       </div>
@@ -100,16 +100,16 @@ const Paste = () => {
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
-            className="relative p-4 border border-gray-700 rounded-lg shadow-md bg-gray-800 text-white"
+            className="relative p-4 border border-gray-700 rounded-lg shadow-md bg-gray-900 text-white"
           >
             {/*Title */}
             <h3 className="text-lg font-bold truncate">{note.title}</h3>
 
             {/*Content Preview */}
-            <p className="text-gray-400 truncate">{note.content}</p>
+            <p className="text-gray-400 pt-2 truncate">{note.content}</p>
             <code className=' absolute right-2 top-2 underline underline-offset-2 text-blue-200 ' >{note.tag}</code>
             {/*Date */}
-            <cite className="block text-gray-500 text-sm mt-2">
+            <cite className="block text-gray-500 text-[12px] mt-2">
               {new Date(note.createdAt).toLocaleDateString()}
             </cite>
 

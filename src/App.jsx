@@ -82,7 +82,7 @@ function App() {
         }}
 /> */}
 
-      {showAnimation ? <StartAnimate /> : <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-[#000054e4] to-[#c290fbd8] text-white relative">
+      {showAnimation ? <StartAnimate /> : <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-[#000054e4] to-[#320565d8] text-white relative">
         {/* Toast Notifications */}
         <ToastContainer
           stacked

@@ -2,11 +2,13 @@ import React, { useRef, useEffect, useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { BsCodeSlash } from "react-icons/bs";
-import { FaCameraRetro, FaCopy, FaShareSquare } from "react-icons/fa";
+import { FaCopy, FaShareSquare } from "react-icons/fa";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { AiOutlinePrinter } from "react-icons/ai";
+import { NavLink } from 'react-router-dom';
+import { TiArrowBack } from "react-icons/ti";
 // import html2canvas from 'html2canvas';
 
 const ViewPaste = () => {
@@ -133,6 +135,9 @@ const ViewPaste = () => {
         ref={pasteRef}
         className="relative w-full max-w-3xl mx-auto flex flex-col p-4 border border-gray-700 rounded-lg shadow-md bg-gray-900 text-white overflow-hidden"
       >
+        <NavLink to="/paste" className="text-2xl" >
+          <TiArrowBack/>
+           </NavLink>
         {/*Title */}
         <h2 className="text-lg sm:text-xl font-semibold text-center mb-4 truncate">
           {paste.title}
