@@ -6,5 +6,6 @@ import SignUp from './SignUp';
 import Login from './LogIn';
 import Profile from './Profile';
 import StartAnimate from './StartAnimate';
+import NotFound from './NotFound';
 
-export { Navbar, Home, Paste, ViewPaste, SignUp, Login, Profile, StartAnimate};
+export { Navbar, Home, Paste, ViewPaste, SignUp, Login, Profile, StartAnimate, NotFound };

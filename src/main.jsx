@@ -4,7 +4,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import './index.css';
 import store from './redux/store.js';
 import App from './App.jsx';
-import { Home, Login, Paste, SignUp, ViewPaste, Profile } from './components';
+import { Home, Login, Paste, SignUp, ViewPaste, Profile, NotFound } from './components';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import ConfirmBox from './components/ConfirmBox.jsx';
 
@@ -20,6 +20,7 @@ const router = createBrowserRouter([
       { path: 'profile', element: <ProtectedRoute><Profile /></ProtectedRoute> }, //  Protected Profile Route
       { path: 'signup', element: <SignUp /> }, //  Public Signup Route
       { path: 'login', element: <Login /> }, //  Public Login Route
+      { path: '*', element: <NotFound /> }, //  Not Found Route
     ],
   },
 ]);
