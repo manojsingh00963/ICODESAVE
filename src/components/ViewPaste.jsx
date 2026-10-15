@@ -1,204 +1,328 @@
-import React, { useRef, useEffect, useState } from 'react';
-// eslint-disable-next-line no-unused-vars
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { BsCodeSlash } from "react-icons/bs";
-import { FaCopy, FaShareSquare } from "react-icons/fa";
-import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import {
+  FiCopy,
+  FiCheck,
+  FiShare2,
+  FiArrowLeft,
+  FiDownload,
+  FiPrinter,
+  FiEdit3,
+  FiCalendar,
+  FiTag,
+  FiCode,
+  FiUser,
+} from 'react-icons/fi';
+import { useParams, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getNoteById } from '../redux/features/noteSlice';
 import { toast } from 'react-toastify';
-import { AiOutlinePrinter } from "react-icons/ai";
-import { NavLink } from 'react-router-dom';
-import { TiArrowBack } from "react-icons/ti";
-// import html2canvas from 'html2canvas';
+import { PulseLoader } from 'react-spinners';
 
 const ViewPaste = () => {
   const { pasteId } = useParams();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const notes = useSelector((state) => state.notes.notes);
+  const currentNote = useSelector((state) => state.notes.currentNote);
+  const loadingCurrentNote = useSelector((state) => state.notes.loadingCurrentNote);
 
-  const paste = notes.find((note) => note._id === pasteId); //Find paste by ID
-  const pasteRef = useRef(null);
-  const [lines, setLines] = useState([]);
+  const [copied, setCopied] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
+  // Locate note from cache or fetch from backend
+  const paste = notes.find((n) => n._id === pasteId) || currentNote;
 
-  //Load paste content
   useEffect(() => {
-    if (paste) {
-      setLines(paste.content ? paste.content.split('\n') : []);
-    } else {
-      toast.error('Paste not found!');
-      navigate('/paste'); //Redirect if paste not found
+    if (!paste && pasteId) {
+      dispatch(getNoteById(pasteId))
+        .unwrap()
+        .catch(() => {
+          setNotFound(true);
+        });
     }
-  }, [paste, navigate]);
+  }, [paste, pasteId, dispatch]);
 
-  //Handle Screenshot
-  // const handleSnapshot = async () => {
-  //   try {
-  //     if (!pasteRef.current) return;
-  //     const canvas = await html2canvas(pasteRef.current, {
-  //       backgroundColor: '#1a202c', //Dark background to match theme
-  //       scale: 2, //Higher resolution
-  //       useCORS: true, //Handle cross-origin issues
-  //     });
-  //     const link = document.createElement('a');
-  //     link.href = canvas.toDataURL('image/png');
-  //     link.download = `${paste.title || 'paste'}-screenshot.png`;
-  //     link.click();
-  //     toast.success('Screenshot saved successfully!');
-  //   } catch (error) {
-  //     console.error('Error capturing screenshot:', error);
-  //     toast.error('Failed to take screenshot.');
-  //   }
-  // };
+  // Handle Copy Code
+  const handleCopy = () => {
+    if (paste?.content) {
+      navigator.clipboard.writeText(paste.content);
+      setCopied(true);
+      toast.success('Code copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
-  // print content
+  // Handle Share Link
+  const handleShare = () => {
+    const url = `${window.location.origin}/view/${pasteId}`;
+    navigator.clipboard.writeText(url);
+    toast.success('Shareable link copied to clipboard! 🔗');
+  };
 
+  // Handle Download Snippet File
+  const handleDownload = () => {
+    if (!paste?.content) return;
+    const extensions = {
+      javascript: 'js',
+      typescript: 'ts',
+      python: 'py',
+      html: 'html',
+      json: 'json',
+      sql: 'sql',
+      cpp: 'cpp',
+      java: 'java',
+      go: 'go',
+      rust: 'rs',
+      bash: 'sh',
+      markdown: 'md',
+    };
+    const ext = extensions[paste.language] || 'txt';
+    const filename = `${(paste.title || 'snippet').replace(/[^a-z0-9_-]/gi, '_')}.${ext}`;
+    const blob = new Blob([paste.content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success(`Downloaded ${filename}!`);
+  };
+
+  // Handle Print Code
   const handlePrint = () => {
-    if (!paste) {
-      toast.error("No content available to print!");
-      return;
-    }
-  
-    const printWindow = window.open("", "_blank", "width=800,height=1000");
-  
+    if (!paste?.content) return;
+    const printWindow = window.open('', '_blank', 'width=850,height=900');
     if (!printWindow) {
-      toast.error("Failed to open print window.");
+      toast.error('Failed to open print preview');
       return;
     }
-  
+
     printWindow.document.write(`
+      <!DOCTYPE html>
       <html>
         <head>
-          <title>${paste.title || "Print"}</title>
+          <title>${paste.title || 'Code Snippet'} - ICODESAVE</title>
           <style>
             body {
-              font-family: Arial, sans-serif;
-              padding: 20px;
-              background: #1a202c;
-              color: #fff;
+              font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
+              padding: 30px;
+              background: #fff;
+              color: #1e293b;
             }
+            .header {
+              border-bottom: 2px solid #e2e8f0;
+              padding-bottom: 12px;
+              margin-bottom: 20px;
+            }
+            h1 { font-size: 22px; margin: 0 0 8px 0; }
+            .meta { font-size: 12px; color: #64748b; }
             pre {
               white-space: pre-wrap;
-              background: #2d3748;
-              padding: 10px;
-              border-radius: 5px;
-              font-size: 14px;
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              padding: 16px;
+              border-radius: 8px;
+              font-size: 13px;
+              line-height: 1.6;
             }
           </style>
         </head>
         <body>
-          <h2>${paste.title || "Untitled Paste"}</h2>
-          <pre>${paste.content}</pre>
+          <div class="header">
+            <h1>${paste.title || 'Untitled Snippet'}</h1>
+            <div class="meta">
+              Language: ${paste.language || 'text'} | Tag: ${paste.tag || 'Code'} | Generated by ICODESAVE
+            </div>
+          </div>
+          <pre>${paste.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
         </body>
       </html>
     `);
-  
     printWindow.document.close();
-  
-    // Use setTimeout to delay printing and prevent auto-close
     setTimeout(() => {
       printWindow.focus();
       printWindow.print();
-    }, 500); // Wait 500ms before printing to ensure full load
-  };
-  
-  
-  
-
-  //Handle Copy
-  const handleCopy = () => {
-    if (paste?.content) {
-      navigator.clipboard.writeText(paste.content);
-      toast.success('Copied to clipboard!');
-    }
+    }, 300);
   };
 
-  //Handle Share
-  const handleShare = () => {
-    const url = `${window.location.origin}/view/${pasteId}`;
-    navigator.clipboard.writeText(url);
-    toast.success(' link copied to clipboard!');
-  };
+  if (loadingCurrentNote) {
+    return (
+      <div className="container mx-auto px-4 py-24 flex flex-col items-center justify-center gap-3">
+        <PulseLoader color="#6366f1" size={10} />
+        <p className="text-xs text-slate-400 font-mono">Loading snippet...</p>
+      </div>
+    );
+  }
 
-  //If paste not found, prevent rendering
-  if (!paste) return null;
+  if (notFound || (!paste && !loadingCurrentNote)) {
+    return (
+      <div className="container mx-auto px-4 py-20 max-w-lg text-center">
+        <div className="glass-panel rounded-2xl p-8 border border-slate-800 shadow-2xl">
+          <div className="w-12 h-12 rounded-xl bg-rose-950/60 border border-rose-800/40 text-rose-400 flex items-center justify-center text-xl mx-auto mb-4">
+            <FiCode />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Snippet Not Found</h2>
+          <p className="text-xs sm:text-sm text-slate-400 mb-6">
+            This snippet might have been deleted or the link is incorrect.
+          </p>
+          <NavLink
+            to="/paste"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition"
+          >
+            <FiArrowLeft />
+            <span>Return to Snippets</span>
+          </NavLink>
+        </div>
+      </div>
+    );
+  }
+
+  const lines = paste?.content ? paste.content.split('\n') : [];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="mt-28 flex justify-center px-4"
+      transition={{ duration: 0.4 }}
+      className="container mx-auto px-4 py-6 max-w-5xl"
     >
-      {/*Paste Content Container */}
-      <div
-        ref={pasteRef}
-        className="relative w-full max-w-3xl mx-auto flex flex-col p-4 border border-gray-700 rounded-lg shadow-md bg-gray-900 text-white overflow-hidden"
-      >
-        <NavLink to="/paste" className="text-2xl" >
-          <TiArrowBack/>
-           </NavLink>
-        {/*Title */}
-        <h2 className="text-lg sm:text-xl font-semibold text-center mb-4 truncate">
-          {paste.title}
-        </h2>
+      {/* Top Header & Actions Bar */}
+      <div className="glass-panel rounded-2xl p-4 sm:p-6 mb-6 shadow-xl border border-indigo-500/20">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <NavLink
+              to="/paste"
+              className="p-2.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition"
+              title="Back to Snippets"
+            >
+              <FiArrowLeft className="text-base" />
+            </NavLink>
 
-        {/*Content */}
-        <div className="border-t border-gray-600 mt-2">
-          {/*Code Icon */}
-          <BsCodeSlash className="absolute right-4 top-4 text-gray-400" />
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  {paste.title || 'Untitled Snippet'}
+                </h1>
+                <span className="text-[10px] uppercase font-mono tracking-wider px-2.5 py-0.5 rounded-md bg-indigo-950/80 border border-indigo-700/50 text-indigo-300 font-semibold">
+                  {paste.tag || 'Code'}
+                </span>
+                {paste.language && (
+                  <span className="text-[10px] uppercase font-mono tracking-wider px-2.5 py-0.5 rounded-md bg-cyan-950/80 border border-cyan-700/50 text-cyan-300 font-semibold">
+                    {paste.language}
+                  </span>
+                )}
+              </div>
 
-          <div className="relative flex">
-            {/*Line Numbers */}
-            <aside className="w-10 text-right pr-2 pt-2 text-gray-400 border-r border-gray-600">
-              {lines.map((_, index) => (
-                <div key={index} className="leading-6">
-                  {index + 1}
-                </div>
-              ))}
-            </aside>
+              <div className="flex items-center gap-3 text-xs text-slate-400 mt-1.5 font-mono flex-wrap">
+                <span className="flex items-center gap-1">
+                  <FiCalendar className="text-slate-500" />
+                  <span>{new Date(paste.createdAt || Date.now()).toLocaleDateString()}</span>
+                </span>
+                <span>•</span>
+                <span>{lines.length} lines</span>
+                {paste.user?.name && (
+                  <>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <FiUser className="text-slate-500" />
+                      <span>{paste.user.name}</span>
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
 
-            {/*Code Content */}
-            <pre className="whitespace-pre-wrap p-4 flex-1 overflow-x-auto text-sm text-gray-300">
-              {lines.join('\n')}
-            </pre>
+          {/* Quick Actions */}
+          <div className="flex items-center gap-2 flex-wrap self-end sm:self-auto">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition cursor-pointer"
+              title="Copy Code"
+            >
+              {copied ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+              <span>{copied ? 'Copied' : 'Copy'}</span>
+            </button>
+
+            <button
+              onClick={handleDownload}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition cursor-pointer"
+              title="Download Source File"
+            >
+              <FiDownload />
+              <span className="hidden sm:inline">Download</span>
+            </button>
+
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition cursor-pointer"
+              title="Print Snippet"
+            >
+              <FiPrinter />
+              <span className="hidden sm:inline">Print</span>
+            </button>
+
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl border border-purple-500/30 bg-purple-950/40 hover:bg-purple-900/60 text-purple-200 transition cursor-pointer"
+              title="Copy Share Link"
+            >
+              <FiShare2 />
+              <span>Share</span>
+            </button>
+
+            <NavLink
+              to={`/paste/${paste._id}`}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition"
+              title="Edit Snippet"
+            >
+              <FiEdit3 />
+              <span>Edit</span>
+            </NavLink>
           </div>
         </div>
       </div>
 
-      {/*Action Buttons */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-3">
-        {/*Screenshot Button */}
-        <motion.button
-          // onClick={handleSnapshot}
-          onClick={handlePrint}
-          className="flex items-center gap-2 px-4 py-2 border border-indigo-500 rounded bg-indigo-900 text-white hover:bg-indigo-700 transition cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-        <AiOutlinePrinter />
-          {/* <FaCameraRetro /> */}
-        </motion.button>
+      {/* Code Display Area */}
+      <div className="glass-panel rounded-2xl overflow-hidden border border-indigo-500/20 shadow-2xl bg-slate-950/90">
+        {/* Editor Title Bar */}
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-900/80 border-b border-slate-800">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+            <span className="ml-3 text-xs font-mono text-slate-400">
+              {paste.title || 'snippet'}.{paste.language || 'txt'}
+            </span>
+          </div>
 
-        {/*Share Button */}
-        <motion.button
-          onClick={handleShare}
-          className="flex items-center gap-2 px-4 py-2 border border-purple-500 rounded bg-purple-900 text-white hover:bg-purple-700 transition cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FaShareSquare />
-        </motion.button>
+          <div className="text-xs font-mono text-slate-400 flex items-center gap-2">
+            <span>Read-Only Viewer</span>
+          </div>
+        </div>
 
-        {/*Copy Button */}
-        <motion.button
-          onClick={handleCopy}
-          className="flex items-center gap-2 px-4 py-2 border border-yellow-500 rounded bg-yellow-900 text-white hover:bg-yellow-700 transition cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FaCopy />
-        </motion.button>
+        {/* Code Content with Line Numbers */}
+        <div className="flex min-h-[400px] overflow-x-auto">
+          {/* Line Numbers */}
+          <div
+            aria-hidden="true"
+            className="w-12 sm:w-14 shrink-0 py-4 select-none text-right pr-3 font-mono text-xs text-slate-600 bg-slate-950/60 border-r border-slate-800/60"
+          >
+            {lines.map((_, i) => (
+              <div key={i} className="leading-6">
+                {i + 1}
+              </div>
+            ))}
+          </div>
+
+          {/* Source Code */}
+          <pre className="flex-1 p-4 font-mono text-xs sm:text-sm leading-6 text-slate-100 overflow-x-auto whitespace-pre selection:bg-indigo-500/30">
+            {paste.content}
+          </pre>
+        </div>
       </div>
     </motion.div>
   );

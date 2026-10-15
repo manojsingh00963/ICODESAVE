@@ -1,110 +1,183 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../utils/axiosinstance";
-import { toast } from "react-toastify";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from '../../utils/axiosinstance';
+import { toast } from 'react-toastify';
 
-// Get all notes
-export const getNotes = createAsyncThunk("/api/notes/getNotes", async (_, { rejectWithValue }) => {
+// Helper to extract clean error message
+const getErrorMessage = (error, defaultMsg) => {
+  return error.response?.data?.error || error.response?.data?.message || defaultMsg;
+};
+
+// Get all notes for the logged in user
+export const getNotes = createAsyncThunk('notes/getNotes', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get("/api/notes/fetchnotes");
+    const response = await axios.get('/api/notes/fetchnotes');
     return response.data;
   } catch (error) {
-    console.error("Fetch Error:", error);
-    toast.error(error.response?.data?.message || "Failed to fetch notes");
-    return rejectWithValue(error.response?.data?.message || "Failed to fetch notes");
+    const msg = getErrorMessage(error, 'Failed to fetch notes');
+    return rejectWithValue(msg);
   }
 });
 
-// Add a note
-export const addNote = createAsyncThunk("/api/notes/addNote", async ({ title, content, tag }, { rejectWithValue }) => {
+// Get a single note by ID (for viewing / direct links)
+export const getNoteById = createAsyncThunk('notes/getNoteById', async (id, { rejectWithValue }) => {
   try {
-    const response = await axios.post("/api/notes/addnote", { title, content, tag });
-    toast.success("Copy-Code successfully!");
-    return response.data;
+    const response = await axios.get(`/api/notes/getnote/${id}`);
+    const noteData = response.data.note || response.data;
+    return noteData;
   } catch (error) {
-    console.error("Add Error:", error);
-    toast.error(error.response?.data?.message || "Failed to add note");
-    return rejectWithValue(error.response?.data?.message || "Failed to add note");
+    const msg = getErrorMessage(error, 'Failed to fetch note');
+    return rejectWithValue(msg);
   }
 });
+
+// Add a new note
+export const addNote = createAsyncThunk(
+  'notes/addNote',
+  async ({ title, content, tag, language }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/api/notes/addnote', {
+        title,
+        content,
+        tag: tag || 'Code',
+        language: language || 'javascript',
+      });
+      toast.success('Snippet saved successfully! ✨');
+      return response.data;
+    } catch (error) {
+      const msg = getErrorMessage(error, 'Failed to save snippet');
+      toast.error(msg);
+      return rejectWithValue(msg);
+    }
+  }
+);
 
 // Delete a note
-export const deleteNote = createAsyncThunk("/api/notes/deleteNote", async (id, { rejectWithValue }) => {
+export const deleteNote = createAsyncThunk('notes/deleteNote', async (id, { rejectWithValue }) => {
   try {
     await axios.delete(`/api/notes/deletenote/${id}`);
-    toast.success("Code deleted successfully!");
+    toast.success('Snippet deleted successfully!');
     return id;
   } catch (error) {
-    console.error("Delete Error:", error);
-    toast.error(error.response?.data?.message || "Failed to delete note");
-    return rejectWithValue(error.response?.data?.message || "Failed to delete note");
+    const msg = getErrorMessage(error, 'Failed to delete snippet');
+    toast.error(msg);
+    return rejectWithValue(msg);
   }
 });
 
 // Edit a note
-export const editNote = createAsyncThunk("/api/notes/editNote", async ({ id, title, content, tag }, { rejectWithValue }) => {
-  try {
-    const response = await axios.put(`/api/notes/updatenote/${id}`, { title, content, tag });
-    toast.success("Code updated successfully!");
-    return response.data;
-  } catch (error) {
-    console.error("Update Error:", error);
-    toast.error(error.response?.data?.message || "Failed to update note");
-    return rejectWithValue(error.response?.data?.message || "Failed to update note");
+export const editNote = createAsyncThunk(
+  'notes/editNote',
+  async ({ id, title, content, tag, language }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`/api/notes/updatenote/${id}`, {
+        title,
+        content,
+        tag,
+        language,
+      });
+      toast.success('Snippet updated successfully! 🚀');
+      const updatedNote = response.data.note || response.data;
+      return updatedNote;
+    } catch (error) {
+      const msg = getErrorMessage(error, 'Failed to update snippet');
+      toast.error(msg);
+      return rejectWithValue(msg);
+    }
   }
-});
+);
 
 // Initial state
 const initialState = {
   notes: [],
+  currentNote: null,
   loading: false,
+  loadingCurrentNote: false,
   error: null,
 };
 
 // Create Slice
 export const noteSlice = createSlice({
-  name: "notes",
+  name: 'notes',
   initialState,
   reducers: {
     resetNotes: (state) => {
       state.notes = [];
-      toast.info("All cleared");
+      state.currentNote = null;
+    },
+    clearCurrentNote: (state) => {
+      state.currentNote = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // Get Notes
+      // Get All Notes
       .addCase(getNotes.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(getNotes.fulfilled, (state, action) => {
         state.loading = false;
-        state.notes = action.payload;
+        state.notes = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getNotes.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
+      // Get Single Note by ID
+      .addCase(getNoteById.pending, (state) => {
+        state.loadingCurrentNote = true;
+        state.error = null;
+      })
+      .addCase(getNoteById.fulfilled, (state, action) => {
+        state.loadingCurrentNote = false;
+        state.currentNote = action.payload;
+        // Also sync into notes array if not already present
+        if (action.payload && action.payload._id) {
+          const index = state.notes.findIndex((n) => n._id === action.payload._id);
+          if (index !== -1) {
+            state.notes[index] = action.payload;
+          } else {
+            state.notes.push(action.payload);
+          }
+        }
+      })
+      .addCase(getNoteById.rejected, (state, action) => {
+        state.loadingCurrentNote = false;
+        state.error = action.payload;
+      })
+
       // Add Note
       .addCase(addNote.fulfilled, (state, action) => {
-        state.notes.unshift(action.payload);
+        if (action.payload) {
+          state.notes.unshift(action.payload);
+        }
       })
 
       // Delete Note
       .addCase(deleteNote.fulfilled, (state, action) => {
         state.notes = state.notes.filter((note) => note._id !== action.payload);
+        if (state.currentNote?._id === action.payload) {
+          state.currentNote = null;
+        }
       })
 
       // Edit Note
       .addCase(editNote.fulfilled, (state, action) => {
-        const index = state.notes.findIndex((note) => note._id === action.payload._id);
+        const updated = action.payload;
+        if (!updated) return;
+        const noteId = updated._id || updated.note?._id;
+        const noteData = updated.note || updated;
+        const index = state.notes.findIndex((note) => note._id === noteId);
         if (index !== -1) {
-          state.notes[index] = action.payload;
+          state.notes[index] = noteData;
+        }
+        if (state.currentNote?._id === noteId) {
+          state.currentNote = noteData;
         }
       });
   },
 });
 
-export const { resetNotes } = noteSlice.actions;
+export const { resetNotes, clearCurrentNote } = noteSlice.actions;
 export default noteSlice.reducer;

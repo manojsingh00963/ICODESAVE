@@ -1,26 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('authToken');
-  const [showMessage, setShowMessage] = useState(false);
+  const location = useLocation();
+  const isAuthenticated = Boolean(token && token !== 'undefined' && token !== 'null');
 
   useEffect(() => {
-    if (!token) {
-      setShowMessage(true);
-      
-      toast.info('Please login first'); // ✅ Show toast message
+    if (!isAuthenticated) {
+      toast.info('Please log in to access your snippets vault.');
     }
-  }, [token]);
+  }, [isAuthenticated]);
 
-  if (!token) {
-    return (
-      <>
-        {showMessage && <h1 className="text-center text-red-500 mt-4">Please login first</h1>}
-        <Navigate to="/login" replace />
-      </>
-    );
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;

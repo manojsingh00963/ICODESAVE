@@ -1,106 +1,85 @@
-import React, { useEffect, useState, } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar, StartAnimate } from './components';
 import { ToastContainer } from 'react-toastify';
-// import { SplashCursor } from './components/Animation';
-// import { CircleCursor } from 'react-cursors'
 import AnimatedCursor from 'react-animated-cursor';
 
 function App() {
+  // Only show intro splash once per browser session
+  const [showAnimation, setShowAnimation] = useState(() => {
+    return !sessionStorage.getItem('hasSeenSplash');
+  });
 
-  const [showAnimation, setShowAnimation] = useState(true)
+  const handleFinishAnimation = () => {
+    setShowAnimation(false);
+    sessionStorage.setItem('hasSeenSplash', 'true');
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowAnimation(false);
-    }, 5 * 1000);
-    return () => {
-      clearTimeout(timer)
+    if (showAnimation) {
+      const timer = setTimeout(() => {
+        handleFinishAnimation();
+      }, 3500);
+      return () => clearTimeout(timer);
     }
-  }, []);
-
-
+  }, [showAnimation]);
 
   return (
-    <div className="showAnimation">
-      {/* <SplashCursor/> */}
-      <AnimatedCursor
-        AnimatedCursor
-        innerSize={8}
-        outerSize={8}
-        color='38, 126, 242'
-        outerAlpha={0.2}
-        innerScale={0.7}
-        outerScale={5}
-        clickables={[
-          'a',
-          'input[type="text"]',
-          'input[type="email"]',
-          'input[type="number"]',
-          'input[type="submit"]',
-          'input[type="image"]',
-          'label[for]',
-          'select',
-          'textarea',
-          'button',
-          '.link',
-          {
-            target: '.custom',
-            options: {
-              innerSize: 12,
-              outerSize: 12,
-              color: '38, 126, 242',
-              outerAlpha: 0.3,
-              innerScale: 0.7,
-              outerScale: 5
-            }
-          }
-        ]}
-      />
-
-      {/* <CircleCursor 
-        safeBoundaryX="1000"
-        safeBoundaryY="700"
-        initial={{
-                dotSize:"2rem",
-                circleSize:"5rem",
-                borderStyle:"dotted",
-                color:"white",
-                borderWidth:"3px",
-                circleDay:"0.1s",
-                dotDelay:"0.05s"
-        }}
-
-        hover={{
-                dotSize:"0rem",
-                circleSize:"10rem",
-                borderStyle:"dotted",
-                color:"white",
-                borderWidth:"3px",
-                circleDay:"0.1s",
-                dotDelay:"0.05s"
-        }}
-/> */}
-
-      {showAnimation ? <StartAnimate /> : <div className="min-h-screen w-full flex flex-col bg-gradient-to-b from-[#000054e4] to-[#320565d8] text-white relative">
-        {/* Toast Notifications */}
-        <ToastContainer
-          stacked
-          position="top-center"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop={true}
-          closeOnClick={true}
-          pauseOnFocusLoss={false}
-          draggable={true}
-          pauseOnHover={true}
-          theme="dark"
+    <div className="min-h-screen bg-[#060814] text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+      {/* Animated Cursor for non-touch devices */}
+      <div className="hidden md:block">
+        <AnimatedCursor
+          innerSize={8}
+          outerSize={24}
+          color="99, 102, 241"
+          outerAlpha={0.25}
+          innerScale={0.8}
+          outerScale={2}
+          clickables={[
+            'a',
+            'input[type="text"]',
+            'input[type="email"]',
+            'input[type="password"]',
+            'input[type="number"]',
+            'input[type="submit"]',
+            'select',
+            'textarea',
+            'button',
+            '.cursor-pointer',
+          ]}
         />
-        <Navbar />
-        <Outlet />
-      </div>}
+      </div>
+
+      {showAnimation ? (
+        <StartAnimate onFinish={handleFinishAnimation} />
+      ) : (
+        <div className="min-h-screen w-full flex flex-col relative overflow-hidden bg-gradient-to-br from-[#060814] via-[#0b1029] to-[#070b1c]">
+          {/* Subtle Ambient Background Glows */}
+          <div className="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
+          <div className="fixed bottom-[-10%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-purple-600/10 blur-[130px] pointer-events-none" />
+
+          {/* Toast Notifications */}
+          <ToastContainer
+            stacked
+            position="top-center"
+            autoClose={2200}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick={true}
+            pauseOnFocusLoss={false}
+            draggable={true}
+            pauseOnHover={true}
+            theme="dark"
+          />
+
+          <Navbar />
+          <main className="flex-1 w-full flex flex-col">
+            <Outlet />
+          </main>
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default App;

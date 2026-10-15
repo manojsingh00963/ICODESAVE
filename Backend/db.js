@@ -4,14 +4,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const connectToMongo = async () => {
+  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/icodesave';
   try {
-    // eslint-disable-next-line no-undef
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB successfully!');
+    await mongoose.connect(uri);
+    console.log(`Connected to MongoDB successfully! Database: ${mongoose.connection.name}`);
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error.message);
-    // eslint-disable-next-line no-undef
-    process.exit(1);
+    // Don't crash immediately in dev, log warning
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   }
 };
 

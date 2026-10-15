@@ -1,228 +1,381 @@
 import React, { useState, useEffect, useRef } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaFileCode, FaHashtag, FaAnglesDown } from "react-icons/fa6";
-import { MdEditRoad } from "react-icons/md";
-import { BsCodeSlash } from "react-icons/bs";
+import {
+  FiSave,
+  FiCheck,
+  FiCopy,
+  FiTrash2,
+  FiCode,
+  FiTag,
+  FiChevronDown,
+  FiFileText,
+} from 'react-icons/fi';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { editNote, addNote, getNotes } from '../redux/features/noteSlice';
+import { editNote, addNote, getNotes, getNoteById } from '../redux/features/noteSlice';
 import { toast } from 'react-toastify';
-import { Blocks } from 'react-loader-spinner';
+import { PulseLoader } from 'react-spinners';
+
+const PREDEFINED_TAGS = ['Code', 'React', 'Backend', 'Frontend', 'Algorithm', 'Utility', 'Database', 'Personal'];
+
+const LANGUAGES = [
+  { label: 'JavaScript', value: 'javascript' },
+  { label: 'TypeScript', value: 'typescript' },
+  { label: 'Python', value: 'python' },
+  { label: 'HTML/CSS', value: 'html' },
+  { label: 'JSON', value: 'json' },
+  { label: 'SQL', value: 'sql' },
+  { label: 'C / C++', value: 'cpp' },
+  { label: 'Java', value: 'java' },
+  { label: 'Go', value: 'go' },
+  { label: 'Rust', value: 'rust' },
+  { label: 'Bash / Shell', value: 'bash' },
+  { label: 'Markdown', value: 'markdown' },
+];
 
 const Home = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [tag, setTag] = useState('');
-  const [showTags, setShowTags] = useState(false);
-  const [customTag, setCustomTag] = useState('');
+  const [tag, setTag] = useState('Code');
+  const [language, setLanguage] = useState('javascript');
+  const [showTagMenu, setShowTagMenu] = useState(false);
+  const [customTagInput, setCustomTagInput] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const { pasteId } = useParams();
   const notes = useSelector((state) => state.notes.notes);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const containerRef = useRef(null);
+  const textareaRef = useRef(null);
+  const lineNumbersRef = useRef(null);
 
-  const [loading, setLoading] = useState(false)
-
-  const colors = ['bg-red-500', 'bg-yellow-500', 'bg-green-500', 'bg-blue-500'];
-  const predefinedTags = ['Code', 'Work', 'Personal', 'Important', 'Reuse'];
-
-
+  // Fetch all notes on initial load if empty
   useEffect(() => {
-    dispatch(getNotes());
-  }, [dispatch]);
+    if (notes.length === 0) {
+      dispatch(getNotes());
+    }
+  }, [dispatch, notes.length]);
 
-
+  // Handle editing mode when pasteId is present
   useEffect(() => {
     if (pasteId) {
-      const paste = notes.find((note) => note._id === pasteId);
-      if (paste) {
-        setTitle(paste.title);
-        setContent(paste.content);
-        setTag(paste.tag || '');
+      const existing = notes.find((n) => n._id === pasteId);
+      if (existing) {
+        setTitle(existing.title || '');
+        setContent(existing.content || '');
+        setTag(existing.tag || 'Code');
+        setLanguage(existing.language || 'javascript');
       } else {
-        toast.error('Paste not found!');
-        navigate('/paste');
+        // Try fetching directly from backend
+        dispatch(getNoteById(pasteId))
+          .unwrap()
+          .then((fetched) => {
+            if (fetched) {
+              setTitle(fetched.title || '');
+              setContent(fetched.content || '');
+              setTag(fetched.tag || 'Code');
+              setLanguage(fetched.language || 'javascript');
+            }
+          })
+          .catch(() => {
+            toast.error('Snippet not found!');
+            navigate('/paste');
+          });
       }
     }
-  }, [notes, pasteId, navigate]);
+  }, [pasteId, notes, dispatch, navigate]);
 
-
-  const handleSubmit = () => {
-    setLoading(true); // Set loading before starting the process
-
-    setTimeout(() => {
-      if (!title.trim() || !content.trim()) {
-        toast.error('Title and content cannot be empty!');
-        setLoading(false); // Stop loading on validation failure
-        return;
-      }
-
-      if (!tag.trim()) {
-        toast.error('Please Add-Tag!');
-        setLoading(false);
-        return;
-      }
-
-      if (customTag && customTag.length <= 10) {
-        setTag(customTag);
-      }
-
-      if (pasteId) {
-        dispatch(editNote({ id: pasteId, title, content, tag }));
-      } else {
-        dispatch(addNote({ title, content, tag }));
-      }
-
-      setTitle('');
-      setContent('');
-      setTag('');
-      setCustomTag('');
-      navigate('/paste');
-      setLoading(false); // Stop loading after completion
-    }, 1000);
+  // Synchronize line numbers scroll with textarea scroll
+  const handleScroll = () => {
+    if (textareaRef.current && lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
+    }
   };
 
+  // Keyboard shortcut: Ctrl+S or Cmd+S to save
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleSubmit();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  });
+
+  const handleCopyCode = () => {
+    if (!content.trim()) return;
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    toast.success('Code copied to clipboard!');
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleClear = () => {
+    if (!content && !title) return;
+    if (window.confirm('Clear current snippet?')) {
+      setTitle('');
+      setContent('');
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!title.trim()) {
+      toast.error('Please enter a title for your snippet');
+      return;
+    }
+    if (!content.trim()) {
+      toast.error('Snippet content cannot be empty');
+      return;
+    }
+
+    setSubmitting(true);
+    const activeTag = (customTagInput.trim() || tag || 'Code').slice(0, 20);
+
+    try {
+      if (pasteId) {
+        await dispatch(
+          editNote({
+            id: pasteId,
+            title: title.trim(),
+            content,
+            tag: activeTag,
+            language,
+          })
+        ).unwrap();
+      } else {
+        await dispatch(
+          addNote({
+            title: title.trim(),
+            content,
+            tag: activeTag,
+            language,
+          })
+        ).unwrap();
+      }
+      navigate('/paste');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const lineCount = Math.max(content.split('\n').length, 1);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -40 }}
+      initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="mt-10 pt-20 pb-10 flex flex-col container mx-auto px-4 md:px-8 lg:px-16"
+      transition={{ duration: 0.4 }}
+      className="container mx-auto px-4 py-6 max-w-5xl"
     >
-      <div className="loader absolute top-56 left-[45%] z-20  ">
-
-      {loading && (
-        <Blocks
-        height="80"
-        width="80"
-        color="#4fa94d"
-        ariaLabel="blocks-loading"
-        wrapperStyle={{}}
-        wrapperClass="blocks-wrapper"
-        visible={true}
-        />
-      )}
-      </div>
-
-      <div className="flex flex-wrap gap-2 justify-center items-center mb-4">
-
-        <input
-          className="w-[50vw] sm:max-w-xs md:max-w-md lg:max-w-lg border rounded p-2 pl-4 bg-gray-100 dark:bg-black placeholder:text-gray-400 focus:outline-none dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
-          type="text"
-          placeholder="Enter title here"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-
-
-        <div className="relative">
-
-          <div
-            className="flex items-center gap-2 border rounded p-2 bg-gray-100 dark:bg-black cursor-pointer transition-all duration-300 ease-in-out hover:border-indigo-500"
-            onClick={() => setShowTags(!showTags)}
-          >
-            <FaHashtag className="text-gray-500 dark:text-gray-400" />
-            <span className=' text-sm ' >{tag || 'Add-Tag'}</span>
-            <motion.div
-              animate={{ rotate: showTags ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <FaAnglesDown className="text-gray-500 dark:text-gray-400" />
-            </motion.div>
+      {/* Top Header & Metadata Controls */}
+      <div className="glass-panel rounded-2xl p-4 sm:p-6 mb-6 shadow-xl border border-indigo-500/20">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <FiCode className="text-indigo-400" />
+              <span>{pasteId ? 'Edit Code Snippet' : 'Create New Snippet'}</span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              {pasteId
+                ? 'Update your snippet content, language, or tags.'
+                : 'Write or paste your code snippet, select the syntax, and store it safely in your vault.'}
+            </p>
           </div>
 
-          <AnimatePresence>
-            {showTags && (
-              <motion.ul
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-12 left-0 z-10 w-full bg-gray-100 dark:bg-black border border-gray-300 dark:border-gray-700 rounded shadow-md overflow-hidden"
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 self-end md:self-auto">
+            {content && (
+              <button
+                type="button"
+                onClick={handleCopyCode}
+                className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 transition cursor-pointer"
+                title="Copy Code"
               >
-                <li className="p-2">
+                {copied ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={handleClear}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-rose-950/40 hover:text-rose-300 text-slate-300 transition cursor-pointer"
+              title="Clear Editor"
+            >
+              <FiTrash2 />
+              <span className="hidden sm:inline">Clear</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 transition duration-200 cursor-pointer disabled:opacity-50"
+            >
+              {submitting ? (
+                <PulseLoader color="#ffffff" size={6} />
+              ) : (
+                <>
+                  <FiSave className="text-base" />
+                  <span>{pasteId ? 'Update Snippet' : 'Save Snippet'}</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Inputs Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2">
+          {/* Title Input */}
+          <div className="md:col-span-6 relative">
+            <input
+              type="text"
+              placeholder="Snippet title (e.g., QuickSort Implementation, Redis Cache Wrapper)"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-white text-sm placeholder:text-slate-500 transition"
+              required
+            />
+          </div>
+
+          {/* Language Selector */}
+          <div className="md:col-span-3">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="w-full px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none text-white text-sm cursor-pointer transition"
+            >
+              {LANGUAGES.map((lang) => (
+                <option key={lang.value} value={lang.value} className="bg-slate-900 text-white">
+                  {lang.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Tag Dropdown & Custom Tag */}
+          <div className="md:col-span-3 relative">
+            <button
+              type="button"
+              onClick={() => setShowTagMenu(!showTagMenu)}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-indigo-500/80 text-white text-sm transition cursor-pointer"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <FiTag className="text-indigo-400" />
+                <span className="truncate">{customTagInput.trim() || tag || 'Select Tag'}</span>
+              </div>
+              <FiChevronDown
+                className={`transition-transform duration-200 ${showTagMenu ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {showTagMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="absolute right-0 top-12 z-30 w-64 glass-panel bg-slate-950/95 border border-indigo-500/30 rounded-xl p-3 shadow-2xl flex flex-col gap-2"
+                >
                   <input
                     type="text"
-                    maxLength={10}
-                    placeholder="Enter tag"
-                    value={tag}
-                    onChange={(e) => setTag(e.target.value)}
-                    required
-                    className="w-full border rounded p-1 pl-4 focus:outline-none bg-gray-100 dark:bg-black placeholder:text-gray-400 dark:text-white dark:caret-white"
+                    maxLength={20}
+                    placeholder="Custom tag..."
+                    value={customTagInput}
+                    onChange={(e) => setCustomTagInput(e.target.value)}
+                    className="w-full px-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
                   />
-                </li>
-                {predefinedTags.map((option) => (
-                  <li
-                    key={option}
-                    onClick={() => {
-                      setTag(option);
-                      setShowTags(false);
-                    }}
-                    className={`p-2 hover:bg-gray-200 dark:hover:bg-gray-800 transition-all duration-200 cursor-pointer ${tag === option ? 'bg-gray-200 dark:bg-gray-800' : ''}`}
-                  >
-                    {option}
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
+                  <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">
+                    Preset Tags
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
+                    {PREDEFINED_TAGS.map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => {
+                          setTag(t);
+                          setCustomTagInput('');
+                          setShowTagMenu(false);
+                        }}
+                        className={`px-2.5 py-1 text-xs rounded-lg transition cursor-pointer ${
+                          tag === t && !customTagInput
+                            ? 'bg-indigo-600 text-white font-medium'
+                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-
-        <motion.button
-          onClick={handleSubmit}
-          className="p-2 text-xl border rounded cursor-pointer transition-all duration-300 ease-in-out hover:text-green-600"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {pasteId ? <MdEditRoad /> : <FaFileCode />}
-        </motion.button>
       </div>
-      {/*  Code Input Area */}
-      <div
 
-        className="relative bg-gray-100 dark:bg-black border border-t-4 mt-4 mx-auto w-full max-w-2xl rounded"
-      >
-        {/*  Drag Handles */}
-        <div ref={containerRef} className="flex p-2 gap-2 ">
-          {colors.map((color) => (
-            <motion.div
-              key={color}
-              drag
-              dragConstraints={containerRef}
-              whileDrag={{ scale: 1.1 }}
-              dragElastic={2}
-              className={`w-4 h-4 rounded-full ${color} cursor-grab transition-all duration-300 hover:scale-110`}
-            />
-          ))}
+      {/* Code Editor Container */}
+      <div className="glass-panel rounded-2xl overflow-hidden border border-indigo-500/20 shadow-2xl bg-slate-950/90">
+        {/* Editor Title Bar / Mac Window Dots */}
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-900/80 border-b border-slate-800">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+            <span className="ml-3 text-xs font-mono text-slate-400 flex items-center gap-1.5">
+              <FiFileText />
+              <span>{title || 'untitled-snippet'}.{language}</span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-400">
+            <span>{lineCount} lines</span>
+            <span>{content.length} chars</span>
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-800/40 text-indigo-300 uppercase text-[10px]">
+              {language}
+            </span>
+          </div>
         </div>
 
-        {/*  Code Slash Icon */}
-        <BsCodeSlash className="absolute top-2 right-2 text-gray-500 dark:text-gray-400 cursor-pointer transition-all duration-300 hover:text-indigo-500" />
-
-        {/*  Code Editor */}
-        <div className="flex border-t">
-          {/*  Line Numbers */}
-          <aside className="w-10 text-right pr-2 pt-4 text-gray-500 dark:text-gray-400 border-r border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
-            {content.split('\n').map((_, index) => (
-              <div key={index}>{index + 1}</div>
+        {/* Textarea + Synchronized Line Numbers */}
+        <div className="relative flex min-h-[420px] max-h-[650px] overflow-hidden">
+          {/* Line Numbers Column */}
+          <div
+            ref={lineNumbersRef}
+            aria-hidden="true"
+            className="w-12 sm:w-14 shrink-0 py-4 select-none text-right pr-3 font-mono text-xs text-slate-600 bg-slate-950/60 border-r border-slate-800/60 overflow-hidden"
+          >
+            {Array.from({ length: lineCount }).map((_, i) => (
+              <div key={i} className="leading-6">
+                {i + 1}
+              </div>
             ))}
-          </aside>
+          </div>
 
-          {/*  Textarea */}
+          {/* Code Textarea */}
           <textarea
+            ref={textareaRef}
             value={content}
-            placeholder="Enter code here"
             onChange={(e) => setContent(e.target.value)}
-            rows={20}
-            className="w-full min-h-[300px] text-sm p-4 focus:outline-none bg-gray-50 dark:bg-gray-800 font-normal placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:text-white dark:caret-white transition-all duration-300 ease-in-out hover:border-indigo-500"
+            onScroll={handleScroll}
+            placeholder="// Paste or write your code here..."
             spellCheck="false"
+            className="w-full flex-1 p-4 bg-transparent text-slate-100 font-mono text-xs sm:text-sm leading-6 placeholder:text-slate-600 focus:outline-none resize-none overflow-y-auto"
             required
           />
+        </div>
+
+        {/* Keyboard shortcut footnote */}
+        <div className="px-4 py-2 bg-slate-900/50 border-t border-slate-800/60 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+          <span>Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Ctrl</kbd> + <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">S</kbd> to save</span>
+          <span className="hidden sm:inline">Automatic cloud persistence</span>
         </div>
       </div>
     </motion.div>
