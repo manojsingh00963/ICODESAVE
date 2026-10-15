@@ -40,7 +40,6 @@ const Navbar = () => {
   useEffect(() => {
     checkAuth();
 
-    // Listen for custom login/logout events across components
     const handleAuthEvent = () => checkAuth();
     window.addEventListener('auth-change', handleAuthEvent);
     window.addEventListener('storage', handleAuthEvent);
@@ -75,39 +74,39 @@ const Navbar = () => {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+    `flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-mono uppercase tracking-wider font-semibold transition-all duration-150 border ${
       isActive
-        ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-        : 'text-slate-300 hover:text-white hover:bg-white/5'
+        ? 'bg-indigo-600/20 text-cyan-300 border-cyan-500/60 shadow-[0_0_15px_rgba(34,211,238,0.25)]'
+        : 'text-slate-300 hover:text-white border-transparent hover:border-slate-700 hover:bg-slate-900/60'
     }`;
 
   return (
     <header className="sticky top-0 z-40 w-full px-4 pt-3 pb-2 flex justify-center">
-      <nav className="w-full max-w-5xl glass-panel rounded-2xl px-4 py-2.5 flex items-center justify-between shadow-2xl border border-indigo-500/20 bg-slate-950/70 backdrop-blur-xl">
-        {/* Brand Logo */}
+      <nav className="w-full max-w-5xl glass-panel px-4 py-2.5 flex items-center justify-between shadow-2xl border border-indigo-500/30 bg-slate-950/85">
+        {/* Brand Logo - Sharp Geometric Box */}
         <NavLink to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-500 to-cyan-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-            <FiCode className="text-xl" />
+          <div className="w-8 h-8 bg-gradient-to-tr from-indigo-600 via-blue-600 to-cyan-400 flex items-center justify-center text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] group-hover:scale-105 transition-transform border border-cyan-400/50">
+            <FiCode className="text-lg" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold tracking-tight text-base sm:text-lg text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
-              ICODESAVE
+            <span className="font-extrabold tracking-tight text-base sm:text-lg text-white font-mono flex items-center gap-1">
+              ICODESAVE<span className="text-cyan-400">_</span>
             </span>
-            <span className="text-[10px] text-indigo-400/80 -mt-1 font-mono tracking-wider">
-              CODE SNIPPETS
+            <span className="text-[9px] text-indigo-400 font-mono tracking-widest uppercase -mt-1">
+              Cloud Vault
             </span>
           </div>
         </NavLink>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-1.5">
+        <div className="hidden md:flex items-center gap-2">
           <NavLink to="/" className={navLinkClass}>
-            <FiPlus className="text-base text-indigo-400" />
+            <FiPlus className="text-sm text-cyan-400" />
             <span>New Snippet</span>
           </NavLink>
           <NavLink to="/paste" className={navLinkClass}>
-            <FiFolder className="text-base text-cyan-400" />
-            <span>My Snippets</span>
+            <FiFolder className="text-sm text-indigo-400" />
+            <span>Vault Snippets</span>
           </NavLink>
         </div>
 
@@ -117,10 +116,10 @@ const Navbar = () => {
             <div className="flex items-center gap-2">
               <NavLink
                 to="/profile"
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-indigo-500/30 bg-indigo-950/40 hover:bg-indigo-900/60 transition text-slate-200 text-sm font-medium"
+                className="flex items-center gap-2 px-3 py-1.5 border border-indigo-500/40 bg-slate-900 hover:bg-indigo-950/60 hover:border-cyan-400/60 transition text-slate-200 text-xs sm:text-sm font-mono"
                 title="Profile Settings"
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white uppercase">
+                <div className="w-5 h-5 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white uppercase border border-indigo-400/40">
                   {userName ? userName.charAt(0) : <FiUser />}
                 </div>
                 <span className="hidden sm:inline max-w-[120px] truncate">
@@ -130,27 +129,27 @@ const Navbar = () => {
 
               <button
                 onClick={handleLogout}
-                className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition duration-200 cursor-pointer"
+                className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-950/30 border border-transparent hover:border-rose-900/50 transition cursor-pointer"
                 title="Log Out"
                 aria-label="Log Out"
               >
-                <FiLogOut className="text-lg" />
+                <FiLogOut className="text-base" />
               </button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <NavLink
                 to="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-slate-300 hover:text-white border border-slate-800 hover:border-slate-700 hover:bg-white/5 transition"
               >
-                <MdLogin className="text-lg text-indigo-400" />
+                <MdLogin className="text-sm text-cyan-400" />
                 <span>Login</span>
               </NavLink>
               <NavLink
                 to="/signup"
-                className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-lg shadow-md shadow-indigo-600/30 transition duration-200"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 border border-indigo-400/40 shadow-[0_0_15px_rgba(99,102,241,0.3)] transition"
               >
-                <MdPersonAdd className="text-lg" />
+                <MdPersonAdd className="text-sm" />
                 <span>Sign Up</span>
               </NavLink>
             </div>
@@ -158,36 +157,36 @@ const Navbar = () => {
 
           {/* Hamburger Menu Button (Mobile) */}
           <button
-            className="md:hidden p-2 text-slate-300 hover:text-white rounded-lg hover:bg-white/10 transition cursor-pointer"
+            className="md:hidden p-1.5 text-slate-300 hover:text-white border border-slate-800 hover:bg-white/10 transition cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation menu"
           >
-            {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+            {menuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer - Sharp Geometric Panel */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden absolute top-18 left-4 right-4 z-50 glass-panel rounded-2xl p-4 shadow-2xl border border-indigo-500/30 bg-slate-950/95 flex flex-col gap-2"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.15 }}
+            className="md:hidden absolute top-16 left-4 right-4 z-50 glass-panel p-4 shadow-2xl border border-indigo-500/40 bg-slate-950/98 flex flex-col gap-2"
           >
             <NavLink to="/" className={navLinkClass}>
-              <FiPlus className="text-base text-indigo-400" />
+              <FiPlus className="text-sm text-cyan-400" />
               <span>New Snippet</span>
             </NavLink>
             <NavLink to="/paste" className={navLinkClass}>
-              <FiFolder className="text-base text-cyan-400" />
-              <span>My Snippets</span>
+              <FiFolder className="text-sm text-indigo-400" />
+              <span>Vault Snippets</span>
             </NavLink>
             {isLoggedIn && (
               <NavLink to="/profile" className={navLinkClass}>
-                <FiUser className="text-base text-purple-400" />
+                <FiUser className="text-sm text-purple-400" />
                 <span>Profile Settings</span>
               </NavLink>
             )}

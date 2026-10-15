@@ -32,14 +32,19 @@ function StartAnimate({ onFinish }) {
       >
         {/* Skip button for quick navigation */}
         <button
+          type="button"
           onClick={onFinish}
-          className="absolute top-6 right-6 z-30 text-xs tracking-wider uppercase px-4 py-2 rounded-full border border-indigo-500/40 bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 hover:text-white transition duration-200 cursor-pointer"
+          className="absolute top-6 right-6 z-30 font-mono text-xs tracking-wider uppercase px-4 py-2 border border-indigo-500/40 bg-indigo-950/60 hover:bg-indigo-900/80 text-indigo-300 hover:text-white transition duration-200 cursor-pointer shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+          style={{ borderRadius: 0 }}
         >
           Skip Intro &rarr;
         </button>
 
         <div className="z-10 text-center px-4">
-          <span className="inline-block text-xs uppercase tracking-widest text-indigo-400 font-semibold px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/50 mb-4">
+          <span
+            className="inline-block text-xs uppercase tracking-widest text-indigo-400 font-mono font-semibold px-3 py-1 bg-indigo-950/80 border border-indigo-700/60 mb-4"
+            style={{ borderRadius: 0 }}
+          >
             Cloud Code Vault
           </span>
           <SplitText

@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   FiUser,
   FiMail,
-  FiBriefcase,
-  FiFileText,
   FiCalendar,
   FiEdit2,
   FiCheck,
@@ -51,14 +49,12 @@ const Profile = () => {
     avatar: '',
   });
 
-  // Fetch notes count if empty
   useEffect(() => {
     if (notes.length === 0) {
       dispatch(getNotes());
     }
   }, [dispatch, notes.length]);
 
-  // Load user data from backend
   const fetchUserProfile = useCallback(async () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -98,7 +94,6 @@ const Profile = () => {
     fetchUserProfile();
   }, [fetchUserProfile]);
 
-  // Handle avatar upload
   const handleAvatarUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -115,7 +110,6 @@ const Profile = () => {
     }
   };
 
-  // Save profile updates to backend
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     if (!formFields.name.trim()) {
@@ -146,7 +140,6 @@ const Profile = () => {
     }
   };
 
-  // Submit feedback
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     if (!feedbackText.trim()) {
@@ -191,42 +184,42 @@ const Profile = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-24 flex flex-col items-center justify-center gap-3">
-        <PulseLoader color="#6366f1" size={10} />
-        <p className="text-xs text-slate-400 font-mono">Loading profile...</p>
+        <PulseLoader color="#22d3ee" size={8} />
+        <p className="text-xs text-slate-400 font-mono uppercase">FETCHING_PROFILE...</p>
       </div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.25 }}
       className="container mx-auto px-4 py-8 max-w-4xl"
     >
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        {/* Left Column: Avatar & Quick Info */}
-        <div className="md:col-span-5 glass-panel rounded-2xl p-6 border border-indigo-500/20 shadow-xl flex flex-col items-center text-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+        {/* Left Column: Sharp Avatar & Quick Info */}
+        <div className="md:col-span-5 glass-panel p-6 border border-indigo-500/25 shadow-2xl flex flex-col items-center text-center">
           <div className="relative group mb-4">
             {userData.avatar ? (
               <img
                 src={userData.avatar}
                 alt="Avatar"
-                className="w-28 h-28 rounded-2xl object-cover border-2 border-indigo-500/40 shadow-xl shadow-indigo-600/20"
+                className="w-28 h-28 object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)]"
               />
             ) : (
-              <div className="w-28 h-28 rounded-2xl bg-gradient-to-tr from-indigo-600 via-blue-600 to-purple-600 flex items-center justify-center text-3xl font-extrabold text-white shadow-xl shadow-indigo-600/20">
+              <div className="w-28 h-28 bg-gradient-to-tr from-indigo-600 via-blue-600 to-cyan-500 flex items-center justify-center text-3xl font-mono font-black text-white border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)]">
                 {userData.name ? userData.name.charAt(0).toUpperCase() : <FiUser />}
               </div>
             )}
 
             <label
               htmlFor="avatar-upload"
-              className="absolute inset-0 bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs font-medium cursor-pointer transition-opacity backdrop-blur-xs"
+              className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-xs font-mono font-bold cursor-pointer transition-opacity backdrop-blur-xs uppercase"
               title="Change Profile Photo"
             >
-              <FiUploadCloud className="text-xl mb-1 text-indigo-300" />
-              <span>Change Photo</span>
+              <FiUploadCloud className="text-xl mb-1 text-cyan-300" />
+              <span>UPLOAD</span>
               <input
                 id="avatar-upload"
                 type="file"
@@ -237,67 +230,71 @@ const Profile = () => {
             </label>
           </div>
 
-          <h2 className="text-xl font-bold text-white tracking-tight">{userData.name}</h2>
-          <p className="text-xs font-mono text-indigo-400 mt-0.5">{userData.role}</p>
+          <h2 className="text-lg font-bold font-mono text-white tracking-tight uppercase">
+            {userData.name}
+          </h2>
+          <p className="text-xs font-mono text-cyan-400 mt-0.5 uppercase tracking-wider">
+            {userData.role}
+          </p>
 
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-2 font-mono">
             <FiMail className="text-slate-500" />
             <span className="truncate max-w-[200px]">{userData.email}</span>
           </div>
 
           {userData.createdAt && (
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 mt-1 font-mono">
+            <div className="flex items-center gap-1.5 text-[10px] text-slate-500 mt-1 font-mono uppercase">
               <FiCalendar />
-              <span>Member since {new Date(userData.createdAt).toLocaleDateString()}</span>
+              <span>MEMBER SINCE {new Date(userData.createdAt).toLocaleDateString()}</span>
             </div>
           )}
 
-          {/* Quick Metrics */}
-          <div className="w-full grid grid-cols-2 gap-3 mt-6 pt-4 border-t border-slate-800">
-            <div className="rounded-xl p-3 bg-slate-900/80 border border-slate-800 flex flex-col items-center">
-              <span className="text-2xl font-black text-indigo-300">{notes.length}</span>
-              <span className="text-[11px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
-                <FiCode /> Snippets
+          {/* Quick Metrics - Sharp Boxes */}
+          <div className="w-full grid grid-cols-2 gap-2 mt-5 pt-4 border-t border-slate-800">
+            <div className="p-3 bg-slate-950 border border-slate-800 flex flex-col items-center">
+              <span className="text-xl font-mono font-bold text-cyan-300">{notes.length}</span>
+              <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                <FiCode /> SNIPPETS
               </span>
             </div>
-            <div className="rounded-xl p-3 bg-slate-900/80 border border-slate-800 flex flex-col items-center">
-              <span className="text-2xl font-black text-cyan-300">Active</span>
-              <span className="text-[11px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
-                Status
+            <div className="p-3 bg-slate-950 border border-slate-800 flex flex-col items-center">
+              <span className="text-xl font-mono font-bold text-emerald-400">ONLINE</span>
+              <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                STATUS
               </span>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="w-full flex flex-col gap-2 mt-6">
+          {/* Action Buttons - Sharp */}
+          <div className="w-full flex flex-col gap-2 mt-5 font-mono text-xs">
             <button
               onClick={() => setShowFeedbackModal(true)}
-              className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl border border-indigo-500/30 bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-300 text-xs sm:text-sm font-medium transition cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-indigo-500/40 bg-slate-950 hover:bg-indigo-950 hover:border-cyan-400 text-cyan-300 font-bold uppercase tracking-wider transition cursor-pointer"
             >
               <FiMessageSquare />
-              <span>Give Feedback</span>
+              <span>FEEDBACK</span>
             </button>
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-xl border border-rose-800/40 bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 text-xs sm:text-sm font-medium transition cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-rose-900/40 bg-rose-950/20 hover:bg-rose-950/60 text-rose-400 font-bold uppercase tracking-wider transition cursor-pointer"
             >
               <FiLogOut />
-              <span>Log Out</span>
+              <span>LOGOUT</span>
             </button>
           </div>
         </div>
 
-        {/* Right Column: Profile Details & Editor */}
-        <div className="md:col-span-7 glass-panel rounded-2xl p-6 border border-indigo-500/20 shadow-xl flex flex-col">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+        {/* Right Column: Profile Details & Editor - Sharp Panel */}
+        <div className="md:col-span-7 glass-panel p-6 border border-indigo-500/25 shadow-2xl flex flex-col">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-5">
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                <FiUser className="text-indigo-400" />
-                <span>Account Information</span>
+              <h2 className="text-lg font-bold font-mono text-white flex items-center gap-2 uppercase">
+                <FiUser className="text-cyan-400" />
+                <span>DEVELOPER_PROFILE</span>
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Manage your public profile and developer credentials.
+              <p className="text-xs font-mono text-slate-400 mt-0.5">
+                Manage your public bio and technical credentials.
               </p>
             </div>
 
@@ -305,107 +302,113 @@ const Profile = () => {
               <button
                 type="button"
                 onClick={() => setEditMode(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-xl border border-indigo-500/40 bg-indigo-950/60 hover:bg-indigo-900 text-indigo-300 transition cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider border border-indigo-500/50 bg-indigo-950/60 hover:bg-indigo-900 text-cyan-300 transition cursor-pointer"
               >
                 <FiEdit2 />
-                <span>Edit Profile</span>
+                <span>EDIT</span>
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => setEditMode(false)}
-                className="text-xs text-slate-400 hover:text-white px-2 py-1"
+                className="text-xs font-mono text-slate-400 hover:text-white px-2 py-1 uppercase"
               >
-                Cancel
+                CANCEL
               </button>
             )}
           </div>
 
           {editMode ? (
-            <form onSubmit={handleSaveChanges} className="space-y-4">
+            <form onSubmit={handleSaveChanges} className="space-y-3.5 font-mono text-xs">
               <div>
-                <label className="block text-xs font-mono text-slate-400 mb-1">Full Name</label>
+                <label className="block text-slate-400 uppercase tracking-wider mb-1">
+                  Full Name
+                </label>
                 <input
                   type="text"
                   value={formFields.name}
                   onChange={(e) => setFormFields({ ...formFields, name: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 text-white focus:border-indigo-500 focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-400 mb-1">Profession / Role</label>
+                <label className="block text-slate-400 uppercase tracking-wider mb-1">
+                  Profession / Role
+                </label>
                 <input
                   type="text"
                   value={formFields.role}
                   onChange={(e) => setFormFields({ ...formFields, role: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 text-white focus:border-indigo-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-slate-400 mb-1">Developer Bio</label>
+                <label className="block text-slate-400 uppercase tracking-wider mb-1">
+                  Developer Bio
+                </label>
                 <textarea
                   rows={4}
                   value={formFields.bio}
                   onChange={(e) => setFormFields({ ...formFields, bio: e.target.value })}
-                  className="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none resize-none"
+                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 text-white focus:border-indigo-500 focus:outline-none resize-none font-sans"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setEditMode(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs sm:text-sm font-medium hover:bg-slate-800 transition"
+                  className="px-4 py-2 border border-slate-800 text-slate-400 uppercase hover:text-white transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs sm:text-sm font-semibold shadow-lg shadow-indigo-600/30 transition disabled:opacity-50 cursor-pointer"
+                  className="flex items-center gap-1.5 px-5 py-2 font-bold uppercase tracking-wider bg-gradient-to-r from-indigo-600 to-cyan-600 text-white border border-cyan-400/50 shadow-md transition disabled:opacity-50 cursor-pointer"
                 >
                   {saving ? (
                     <PulseLoader color="#ffffff" size={6} />
                   ) : (
                     <>
                       <FiCheck />
-                      <span>Save Changes</span>
+                      <span>SAVE_CHANGES</span>
                     </>
                   )}
                 </button>
               </div>
             </form>
           ) : (
-            <div className="space-y-5 text-sm">
+            <div className="space-y-4 text-xs font-mono">
               <div>
-                <span className="block text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">
-                  Full Name
+                <span className="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+                  FULL NAME
                 </span>
-                <p className="text-white font-medium text-base">{userData.name}</p>
+                <p className="text-white font-bold text-sm tracking-wide">{userData.name}</p>
               </div>
 
               <div>
-                <span className="block text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">
-                  Email Address
+                <span className="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+                  EMAIL ADDRESS
                 </span>
                 <p className="text-slate-300">{userData.email}</p>
               </div>
 
               <div>
-                <span className="block text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">
-                  Profession / Role
+                <span className="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+                  PROFESSION / ROLE
                 </span>
                 <p className="text-slate-300">{userData.role}</p>
               </div>
 
               <div>
-                <span className="block text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">
-                  Bio
+                <span className="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">
+                  BIO
                 </span>
-                <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">
+                <p className="text-slate-300 font-sans whitespace-pre-wrap leading-relaxed text-sm">
                   {userData.bio}
                 </p>
               </div>
@@ -414,24 +417,24 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Feedback Modal */}
+      {/* Feedback Modal - Sharp Brutalist Dialog */}
       <AnimatePresence>
         {showFeedbackModal && (
-          <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-panel bg-slate-950 border border-indigo-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+              className="glass-panel bg-slate-950 border border-indigo-500/40 p-6 max-w-md w-full shadow-2xl font-mono text-xs"
             >
               <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 className="text-sm font-bold font-mono text-white flex items-center gap-2 uppercase">
                   <FiStar className="text-amber-400" />
-                  <span>Send Feedback</span>
+                  <span>SUBMIT_FEEDBACK</span>
                 </h3>
                 <button
                   onClick={() => setShowFeedbackModal(false)}
-                  className="text-slate-400 hover:text-white text-sm"
+                  className="text-slate-400 hover:text-white"
                 >
                   ✕
                 </button>
@@ -439,8 +442,8 @@ const Profile = () => {
 
               <form onSubmit={handleFeedbackSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-2">
-                    How would you rate ICODESAVE?
+                  <label className="block text-slate-400 uppercase tracking-wider mb-2">
+                    Developer Rating
                   </label>
                   <div className="flex items-center gap-2">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -454,46 +457,46 @@ const Profile = () => {
                           className={
                             star <= rating
                               ? 'text-amber-400 fill-amber-400'
-                              : 'text-slate-600'
+                              : 'text-slate-700'
                           }
                         />
                       </button>
                     ))}
-                    <span className="ml-2 text-xs font-mono text-amber-300">{rating} / 5</span>
+                    <span className="ml-2 font-bold text-amber-300">{rating} / 5</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1">
-                    Your thoughts & suggestions
+                  <label className="block text-slate-400 uppercase tracking-wider mb-1">
+                    Comments & Suggestions
                   </label>
                   <textarea
                     rows={4}
                     value={feedbackText}
                     onChange={(e) => setFeedbackText(e.target.value)}
-                    placeholder="Tell us what you like or what could be improved..."
-                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none resize-none placeholder:text-slate-600"
+                    placeholder="Your feedback to improve the vault..."
+                    className="w-full p-3 bg-slate-900 border border-slate-800 text-white font-sans text-xs focus:border-indigo-500 focus:outline-none resize-none placeholder:text-slate-600"
                     required
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-2">
+                <div className="flex justify-end gap-2.5 pt-1">
                   <button
                     type="button"
                     onClick={() => setShowFeedbackModal(false)}
-                    className="px-4 py-2 text-xs rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 transition"
+                    className="px-4 py-2 border border-slate-800 text-slate-400 uppercase hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={submittingFeedback}
-                    className="px-5 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition disabled:opacity-50 cursor-pointer"
+                    className="px-5 py-2 font-bold uppercase tracking-wider bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400 shadow-md transition disabled:opacity-50 cursor-pointer"
                   >
                     {submittingFeedback ? (
                       <PulseLoader color="#ffffff" size={6} />
                     ) : (
-                      'Submit Feedback'
+                      'SUBMIT'
                     )}
                   </button>
                 </div>

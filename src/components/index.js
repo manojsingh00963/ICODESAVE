@@ -7,5 +7,17 @@ import Login from './LogIn';
 import Profile from './Profile';
 import StartAnimate from './StartAnimate';
 import NotFound from './NotFound';
+import SmoothCursor from './SmoothCursor';
 
-export { Navbar, Home, Paste, ViewPaste, SignUp, Login, Profile, StartAnimate, NotFound };
+export {
+  Navbar,
+  Home,
+  Paste,
+  ViewPaste,
+  SignUp,
+  Login,
+  Profile,
+  StartAnimate,
+  NotFound,
+  SmoothCursor,
+};

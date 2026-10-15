@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Navbar, StartAnimate } from './components';
+import { Navbar, StartAnimate, SmoothCursor } from './components';
 import { ToastContainer } from 'react-toastify';
-import AnimatedCursor from 'react-animated-cursor';
 
 function App() {
   // Only show intro splash once per browser session
@@ -25,38 +24,17 @@ function App() {
   }, [showAnimation]);
 
   return (
-    <div className="min-h-screen bg-[#060814] text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
-      {/* Animated Cursor for non-touch devices */}
-      <div className="hidden md:block">
-        <AnimatedCursor
-          innerSize={8}
-          outerSize={24}
-          color="99, 102, 241"
-          outerAlpha={0.25}
-          innerScale={0.8}
-          outerScale={2}
-          clickables={[
-            'a',
-            'input[type="text"]',
-            'input[type="email"]',
-            'input[type="password"]',
-            'input[type="number"]',
-            'input[type="submit"]',
-            'select',
-            'textarea',
-            'button',
-            '.cursor-pointer',
-          ]}
-        />
-      </div>
+    <div className="min-h-screen bg-[#05070e] text-slate-100 flex flex-col font-sans selection:bg-indigo-500/40 selection:text-white">
+      {/* High performance ultra-smooth responsive cursor */}
+      <SmoothCursor />
 
       {showAnimation ? (
         <StartAnimate onFinish={handleFinishAnimation} />
       ) : (
-        <div className="min-h-screen w-full flex flex-col relative overflow-hidden bg-gradient-to-br from-[#060814] via-[#0b1029] to-[#070b1c]">
-          {/* Subtle Ambient Background Glows */}
-          <div className="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
-          <div className="fixed bottom-[-10%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-purple-600/10 blur-[130px] pointer-events-none" />
+        <div className="min-h-screen w-full flex flex-col relative overflow-hidden bg-gradient-to-b from-[#05070e] via-[#090d1f] to-[#05070e]">
+          {/* Subtle Ambient Background Gradients */}
+          <div className="fixed top-[-10%] left-[-10%] w-[35vw] h-[35vw] bg-indigo-600/10 blur-[130px] pointer-events-none" />
+          <div className="fixed bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-cyan-600/10 blur-[140px] pointer-events-none" />
 
           {/* Toast Notifications */}
           <ToastContainer
